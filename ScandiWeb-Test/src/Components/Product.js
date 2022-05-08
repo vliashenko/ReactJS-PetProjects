@@ -45,6 +45,9 @@ const Container = styled.div`
     
     opacity: ${props => props.inStock === "false" &&  '0.5'};
 
+    @media (max-width: 1200px) {
+        margin: 20px 0px;
+    }
 `;
 const ImageContainer = styled.div`
     max-width: 356px;

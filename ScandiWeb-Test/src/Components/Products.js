@@ -19,6 +19,10 @@ const ProductsContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+
+    @media (max-width: 1200px) {
+        justify-content: space-around;
+    }
 `;
 
 class Products extends Component {

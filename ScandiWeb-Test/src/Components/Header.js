@@ -19,7 +19,9 @@ const Category = styled.div`
     text-align: center;
     margin: 0px 16px;
     cursor: pointer;
-    color: #1D1F22;
+
+    color: ${props=> props.category  === 'true' ?'#5ECE7B ':'#1D1F22'};
+    border-bottom: ${props => props.category  === 'true' ? "2px solid #5ECE7B" : "none"};
 
     &:hover {
         color: #5ECE7B;
@@ -204,8 +206,20 @@ class Header extends Component {
 
         this.state = {
             currencyIsOpen: false,
-            cartIsOpen: false
+            cartIsOpen: false,
+            activeCategory: "allProducts"
         }
+    }
+
+    getActiveCategory = (category) => {
+        this.setState(() => ({
+            activeCategory: category
+        }))
+    }
+
+    onClickCategory = (category) => {
+        this.getActiveCategory(category)
+        this.props.getCategory(category)
     }
 
     setCurrencyOpen = () => {
@@ -227,13 +241,19 @@ class Header extends Component {
         return (
             <Container>
                 <Left>
-                    <Category>
+                    <Category 
+                    category={this.state.activeCategory === "allProducts" ? 'true' : 'false'} 
+                    onClick={() => this.onClickCategory('allProducts')}>
                         All
                     </Category>
-                    <Category>
+                    <Category 
+                     category={this.state.activeCategory === "tech" ? 'true' : 'false'}
+                    onClick={() => this.onClickCategory('tech')}>
                         Tech
                     </Category>
-                    <Category>
+                    <Category 
+                     category={this.state.activeCategory === "clothes" ? 'true' : 'false'}
+                    onClick={() =>this.onClickCategory('clothes')}>
                         Clothes
                     </Category>
                 </Left>
