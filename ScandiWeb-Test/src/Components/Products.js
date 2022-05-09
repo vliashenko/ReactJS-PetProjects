@@ -17,25 +17,71 @@ const Title = styled.h3`
 const ProductsContainer = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-wrap: wrap;
-
-    @media (max-width: 1200px) {
-        justify-content: space-around;
-    }
 `;
 
 class Products extends Component {
+
     render() {
+
+        const { cartIsOpen,allProducts, tech, clothes, category, currentCurrencyValue, getChosenProduct, getProductToCartPLP} = this.props;
+        
+        
+        const showCategory = (category) => {
+
+
+            if(allProducts !== null && tech !== null && clothes !== null) {
+
+                if(category === "allProducts") {
+                  return  allProducts.map(product => {
+                        const {id,...productProps} = product;
+                        return (<Product 
+                            key={id}
+                            cartIsOpen={cartIsOpen}
+                            getChosenProduct={getChosenProduct} 
+                            currentCurrencyValue={currentCurrencyValue}
+                            id={id}
+                            getProductToCartPLP={getProductToCartPLP}
+                            {...productProps}/>)
+                    })
+                } else if (category === "tech") {
+                    return tech.map(product => {
+                        const {id,...productProps} = product;
+                        return (<Product 
+                            key={id} 
+                            cartIsOpen={cartIsOpen}
+                            getChosenProduct={getChosenProduct}
+                            currentCurrencyValue={currentCurrencyValue}
+                            id={id}
+                            getProductToCartPLP={getProductToCartPLP}
+                            {...productProps}/>)
+                    })
+                } else if (category === "clothes") {
+                    return  clothes.map(product => {
+                        const {id,...productProps} = product;
+                        return (<Product 
+                            key={id} 
+                            cartIsOpen={cartIsOpen}
+                            getChosenProduct={getChosenProduct}
+                            currentCurrencyValue={currentCurrencyValue}
+                            id={id}
+                            getProductToCartPLP={getProductToCartPLP}
+                            {...productProps}/>)
+                    })
+                }
+            }
+            
+        }
+
+
         return (
             <Container cartIsOpen={this.props.cartIsOpen}>
                 <Title>
                     Category name
                 </Title>
                 <ProductsContainer >
-                    <Product/>
-                    <Product/>
-                    <Product/>
+                    {showCategory(category)}
                 </ProductsContainer>
             </Container>
         );

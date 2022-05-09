@@ -15,13 +15,9 @@ export const client = new ApolloClient({
 
 
 root.render(
-  <React.StrictMode>
+  <ApolloProvider client={client}>
 
-    <ApolloProvider client={client}>
+    <App />
 
-      <App />
-
-    </ApolloProvider>
-    
-  </React.StrictMode>
+  </ApolloProvider>
 );

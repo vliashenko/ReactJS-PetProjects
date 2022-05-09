@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import MiniCartItem from './MiniCartItem';
 import styled from "styled-components";
 
@@ -103,6 +104,8 @@ const CurrencyItem = styled.div`
     letter-spacing: 0em;
     cursor: pointer;
 
+    background: ${props => props.activeCurrency === 'true'? " #EEEEEE" : "white"};
+
     &: hover {
         background: #EEEEEE;
     }
@@ -119,6 +122,21 @@ const CartImage = styled.img`
     width: 20px;
     height: 18px;
     margin-left: 22px;
+    position: relative;
+`;
+
+const CartQuantity = styled.div`
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #1D1F22;
+    border-radius:50%;
+    color: white;
+    font-size: 14px;
+    top: -10px;
+    left: 35px;
+    text-align: center;
+    line-height: 20px;
 `;
 
 const CartListContainer = styled.div`
@@ -207,9 +225,33 @@ class Header extends Component {
         this.state = {
             currencyIsOpen: false,
             cartIsOpen: false,
-            activeCategory: "allProducts"
+            activeCategory: "allProducts",
+            activeCurrencyValue: "USD"
         }
     }
+
+    getCurrencySign = () => {
+        if(this.state.activeCurrencyValue === "USD"){
+            return "$"
+        } else if (this.state.activeCurrencyValue === "GBP"){
+            return "£"
+        } else {
+            return "¥"
+        }
+    }
+
+    getActiveCurrencyValue = (value) => {
+        this.setState(() => ({
+            activeCurrencyValue: value
+        }))
+    }
+
+    onClickCurrency = (value) => {
+        this.getActiveCurrencyValue(value)
+        this.props.getCurrentCurrencyValue(value)
+    }
+
+    
 
     getActiveCategory = (category) => {
         this.setState(() => ({
@@ -238,59 +280,78 @@ class Header extends Component {
     }
 
     render() {
+        const { productsInCart, currentCurrencyValue } = this.props;
+        
         return (
             <Container>
                 <Left>
+                    <Link to="/" style={{textDecoration: "none"}}>
                     <Category 
                     category={this.state.activeCategory === "allProducts" ? 'true' : 'false'} 
                     onClick={() => this.onClickCategory('allProducts')}>
                         All
                     </Category>
+                    </Link>
+                    <Link to="/" style={{textDecoration: "none"}}>
                     <Category 
                      category={this.state.activeCategory === "tech" ? 'true' : 'false'}
                     onClick={() => this.onClickCategory('tech')}>
                         Tech
                     </Category>
+                    </Link>
+                    <Link to="/" style={{textDecoration: "none"}}>
                     <Category 
                      category={this.state.activeCategory === "clothes" ? 'true' : 'false'}
                     onClick={() =>this.onClickCategory('clothes')}>
                         Clothes
                     </Category>
+                    </Link>
                 </Left>
                 <Center>
+                <Link to="/" style={{textDecoration: "none"}}>
                     <BoxImage src={require ('../Images/logo.png')}/>
                     <LineImage src={require ('../Images/logo-arrow.png')}/>
                     <ArrowImage src={require ('../Images/logo-arrow-vector.png')}/>
+                </Link>
                 </Center>
                 <Right>
                     <Currency >
                         <CurrencySign onClick = {this.setCurrencyOpen}>
-                        $   
+                        {this.getCurrencySign()}   
                         </CurrencySign>
                         
                         <CurrencyVector onClick = {this.setCurrencyOpen} src={require ('../Images/vector-arrow.png')}/>
                         {this.state.currencyIsOpen && 
                             <CurrencyMenu>
-                            <CurrencyItem>$ USD</CurrencyItem>
-                            <CurrencyItem>€ EUR</CurrencyItem>
-                            <CurrencyItem>€ EUR</CurrencyItem>
+                            <CurrencyItem 
+                            activeCurrency={this.state.activeCurrencyValue === "USD"? 'true' : 'false'} 
+                            onClick={() => this.onClickCurrency('USD')}>$ USD</CurrencyItem>
+                            <CurrencyItem 
+                            activeCurrency={this.state.activeCurrencyValue === "GBP"? 'true' : 'false'} 
+                            onClick={() => this.onClickCurrency('GBP')}>£ GBP</CurrencyItem>
+                            <CurrencyItem 
+                            activeCurrency={this.state.activeCurrencyValue === "JPY" ? 'true' : 'false'} 
+                            onClick={() => this.onClickCurrency('JPY')}>¥ JPY</CurrencyItem>
                             </CurrencyMenu>
                         }
                     </Currency>
                     <CartContainer>
                         <CartImage onClick = {this.setCartOpen} src={require ('../Images/cart.png')}/>
+                        {productsInCart.length > 0 && <CartQuantity>{productsInCart.length}</CartQuantity>}
                         {this.state.cartIsOpen && 
                         <CartListContainer>
-                            {this.props.ProductsInCart > 0? 
+                            {productsInCart.length > 0? 
                             <MiniCartContent>
                             <Title>
                                 My Bag,
                                 <ItemCount>
-                                   1 item 
+                                   {productsInCart.length} {productsInCart.length > 1 ? "items" : "item"} 
                                 </ItemCount>
                                  
                             </Title>
-                            <MiniCartItem/>
+                            <MiniCartItem 
+                                currentCurrencyValue={currentCurrencyValue}
+                                productsInCart={productsInCart}/>
                             <Total>
                                 <TotalText>
                                     Total

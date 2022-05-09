@@ -140,20 +140,31 @@ const Image = styled.img`
 
 class MiniCartItem extends Component {
     render() {
-        return (
-            <Container>
+        const { productsInCart, currentCurrencyValue } = this.props;
+        
+
+        const itemInCart = productsInCart.map((product,i) => {
+            
+            const price = product.prices.map(item => {
+                if(item.currency.label === currentCurrencyValue) {
+                    return `${item.currency.symbol} ${item.amount}`
+                }
+            })
+            
+            return (
+                <Container key={i}>
                 <Left>
                     <Title>
-                        Apollo
+                        {product.brand}
                     </Title>  
                     <SubTitle>
-                        Running Short
+                        {product.name}
                     </SubTitle>
                     <Price>
-                        $50
+                        {price}
                     </Price>
                     <Size>
-                        <SmallTitle>
+                        {/* <SmallTitle>
                         Size:
                         </SmallTitle>
                         <SizeContainer>
@@ -161,10 +172,10 @@ class MiniCartItem extends Component {
                             <SizeItem>S</SizeItem>
                             <SizeItem>M</SizeItem>
                             <SizeItem>L</SizeItem>
-                        </SizeContainer>
+                        </SizeContainer> */}
                     </Size>
                     <Color>
-                        <SmallTitle>
+                        {/* <SmallTitle>
                         Color:
                         </SmallTitle>
                         
@@ -172,7 +183,7 @@ class MiniCartItem extends Component {
                             <ColorItem chosen="true" bg="red"></ColorItem>
                             <ColorItem bg="green"></ColorItem>
                             <ColorItem bg="yellow"></ColorItem>
-                        </ColorContainer>
+                        </ColorContainer> */}
                     </Color>
                 </Left>
                 <Right>
@@ -186,10 +197,65 @@ class MiniCartItem extends Component {
                         </Button>
                     </AmountContainer>
                      <ImageContainer>
-                        <Image src="https://cdn.shopify.com/s/files/1/0096/2622/2688/files/TT_Dropdown_sweater_2048x2048.jpg?v=1639666761"/>
+                        <Image src={product.name==="Jacket"? product.gallery[5] : product.gallery}/>
                     </ImageContainer>
                 </Right>
             </Container>
+            )
+        })
+        return (
+            <>
+                {itemInCart}
+            </>
+            // <Container>
+            //     <Left>
+            //         <Title>
+            //             Apollo
+            //         </Title>  
+            //         <SubTitle>
+            //             Running Short
+            //         </SubTitle>
+            //         <Price>
+            //             $50
+            //         </Price>
+            //         <Size>
+            //             <SmallTitle>
+            //             Size:
+            //             </SmallTitle>
+            //             <SizeContainer>
+            //                 <SizeItem chosen="true">XS</SizeItem>
+            //                 <SizeItem>S</SizeItem>
+            //                 <SizeItem>M</SizeItem>
+            //                 <SizeItem>L</SizeItem>
+            //             </SizeContainer>
+            //         </Size>
+            //         <Color>
+            //             <SmallTitle>
+            //             Color:
+            //             </SmallTitle>
+                        
+            //             <ColorContainer>
+            //                 <ColorItem chosen="true" bg="red"></ColorItem>
+            //                 <ColorItem bg="green"></ColorItem>
+            //                 <ColorItem bg="yellow"></ColorItem>
+            //             </ColorContainer>
+            //         </Color>
+            //     </Left>
+            //     <Right>
+            //         <AmountContainer>
+            //             <Button>
+            //                 <Plus/>
+            //             </Button>
+            //             <Amount>1</Amount>
+            //             <Button>
+            //                 <Minus/>
+            //             </Button>
+            //         </AmountContainer>
+            //          <ImageContainer>
+            //             <Image src="https://cdn.shopify.com/s/files/1/0096/2622/2688/files/TT_Dropdown_sweater_2048x2048.jpg?v=1639666761"/>
+            //         </ImageContainer>
+            //     </Right>
+            // </Container>
         );
     }
 }

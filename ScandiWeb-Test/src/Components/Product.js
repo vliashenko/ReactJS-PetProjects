@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from "styled-components";
 
 const CartButton = styled.button`
     z-index: 1;
     position: absolute;
-    top: 90%;
+    top: 75%;
     left: 80%;
     width: 52px;
     height: 52px;
@@ -29,13 +30,13 @@ const OutOfStock = styled.div`
     letter-spacing: 0px;
     color: black;
     opacity: 0;
-    opacity: ${props => props.inStock === "false" && 1};
+    opacity: ${props => props.inStock === false && 1};
 `;
 
 const Container = styled.div`
     width: 386px;
     height: 434px;
-
+    position: relative;
     &:hover {
         box-shadow: 0px 4px 35px #a8acb03d;
     }
@@ -43,7 +44,7 @@ const Container = styled.div`
         opacity: 1;
     }
     
-    opacity: ${props => props.inStock === "false" &&  '0.5'};
+    opacity: ${props => props.inStock === false &&  '0.5'};
 
     @media (max-width: 1200px) {
         margin: 20px 0px;
@@ -53,7 +54,7 @@ const ImageContainer = styled.div`
     max-width: 356px;
     max-height: 338px;
     margin: 16px auto 0px;
-    position: relative;
+    cursor: pointer;
 `;
 
 const Image = styled.img`
@@ -105,26 +106,37 @@ const Price = styled.div`
 
 class Product extends Component {
     render() {
+
+        const {cartIsOpen,brand, gallery, inStock, name, prices, currentCurrencyValue, attributes,getChosenProduct, id, getProductToCartPLP} = this.props;
+
+        const price = prices.map(item => {
+            if(item.currency.label === currentCurrencyValue) {
+                return `${item.currency.symbol} ${item.amount}`
+            }
+        })
+
         return (
-            <Container inStock={this.props.inStock}>
-                <ImageContainer>
-                    <Image src="https://cdn.shopify.com/s/files/1/0096/2622/2688/files/TT_Dropdown_sweater_2048x2048.jpg?v=1639666761"/>
-                    <OutOfStock inStock={this.props.inStock}>
+            <Container inStock={inStock} onClick={() =>getChosenProduct(this.props)}>
+                <Link to="/productPage">
+                <ImageContainer >
+                    <Image src={name==="Jacket"? gallery[5] : gallery}/>
+                    <OutOfStock inStock={inStock}>
                         OUT OF STOCK
                     </OutOfStock>
-                    <CartButton  disabled={this.props.inStock === "false"? true : false}>
+                </ImageContainer>
+                </Link>
+                    <CartButton onClick={()=> getProductToCartPLP(this.props)}  disabled={inStock === false? true : false || cartIsOpen === true? true: false}>
                         <Cart src={require ('../Images/product-cart.png')}/>
                     </CartButton>
-                </ImageContainer>
                 <Info>
                     <Brand>
-                        Apollo
+                        {brand}
                     </Brand>
                     <Name>
-                        Running Short
+                        {name}
                     </Name>
                     <Price>
-                        $50
+                        {price}
                     </Price>
                 </Info>
                     

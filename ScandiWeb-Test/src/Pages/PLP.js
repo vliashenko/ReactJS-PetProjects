@@ -1,44 +1,23 @@
 import React, { Component } from 'react';
-import Header from "../Components/Header";
 import Products from '../Components/Products';
 import styled from 'styled-components';
 
 const Container = styled.div``;
 
 class PLP extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            cartIsOpen: null,
-            category: null
-        }
-    }
-
-    getCategory = (category) => {
-        this.setState(() => ({
-            category: category
-        }))
-    }
-
-    checkCartState = (state) => {
-        this.setState(() => {
-            return {
-                cartIsOpen: state  
-            }
-        })
-    }
 
     render() {
         return (
-            <Container>
-                <Header 
-                checkCartState={this.checkCartState}
-                getCategory={this.getCategory}/>
+            <Container>           
                 <Products 
-                
-                
-                cartIsOpen={this.state.cartIsOpen}/>
+                cartIsOpen={this.props.cartIsOpen}
+                allProducts={this.props.allProducts}
+                tech={this.props.tech}
+                clothes={this.props.clothes}
+                currentCurrencyValue={this.props.currentCurrencyValue}
+                category={this.props.category}
+                getChosenProduct={this.props.getChosenProduct}
+                getProductToCartPLP={this.props.getProductToCartPLP}/>
             </Container>
         );
     }
