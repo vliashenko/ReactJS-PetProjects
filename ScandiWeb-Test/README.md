@@ -6,5 +6,5 @@ I just hope to finish it in time T_T<br>
 4.Each item can be opened in ProductPage.<br>
 5.Each attribute is shown in PP and can be chosen.<br>
 6.React-Router-Dom added.<br>
-7.Prices can be changed to two nore currencies.<br>
+7.Prices can be changed in to two more currencies.<br>
 8.Products can be added to a cart on Product List Page.<br>
