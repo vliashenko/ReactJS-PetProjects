@@ -1,22 +1,48 @@
 import React, { Component } from 'react';
+import history from "history/browser";
+import GetCurrentPrice from '../Functions/GetCurrentPrice';
 import styled from "styled-components";
 
-const Container = styled.div`
-    margin-top: 82px;
-    padding-bottom: 178px;
-    display: flex;
+let OutOfStock = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 38px;
+    letter-spacing: 0px;
+    color: black;
+    opacity: 0;
+    opacity: ${props => props.inStock === false && 1};
+`;
 
-    opacity: ${props=> props.cartIsOpen && "0.5"}
+let Container = styled.div`
+    padding-top: 82px;
+    padding-bottom: 178px;
+    
+    
+    backdrop-filter: ${props => props.cartIsOpen && 'brightness(90%)'};
+    filter: ${props => props.cartIsOpen && 'brightness(90%)'};
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    max-width: 1280px;
+    margin: 0 auto;
 `;
 
 const Left = styled.div`
     display: flex;
     flex-direction: column;
 `;
-const SmallImageContainer = styled.div`
+let SmallImageContainer = styled.div`
     width: 80px;
     margin-bottom: 32.39px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+    pointer-events: ${props=> props.disabled === true && "none"};
     border: ${props => props.chosen === "true" && "1px solid #d7d7d778"}
 `;
 const SmallImage = styled.img`
@@ -28,7 +54,7 @@ const SmallImage = styled.img`
 const Center = styled.div`
     margin-left: 62.29px;
 `;
-const BigImageContainer = styled.div`
+let BigImageContainer = styled.div`
     width: 610px;
 
     @media (max-width:1138px){
@@ -37,6 +63,7 @@ const BigImageContainer = styled.div`
     @media (max-width:916px){
         width: 300px
     }
+    opacity: ${props => props.inStock === false &&  '0.5'};
 `;
 const BigImage = styled.img`
     width: 100%;
@@ -79,7 +106,7 @@ const SizeContainer = styled.div`
     display: flex;
 `;
 
-const SizeItem = styled.div`
+let SizeItem = styled.div`
     margin-right: 12px;
     display: flex;
     align-items: center;
@@ -93,6 +120,7 @@ const SizeItem = styled.div`
     border: 1px solid #1D1F22;
     cursor: pointer;
 
+    pointer-events: ${props=> props.disabled === true && "none"};
     background: ${props => props.chosen === "true" && '#1D1F22'};
     color: ${props => props.chosen === "true" && 'white'};
 `;
@@ -105,14 +133,23 @@ const ColorContainer = styled.div`
     align-items: center;
 `;
 
-const ColorItem = styled.div`
+let ColorItemContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32.8px;
+    height: 32.8px;
+    margin-right: 10px;
+    border: ${props => props.chosen === "true" && '2px solid #5ECE7B'};
+`;
+
+let ColorItem = styled.div`
     width: 32px;
     height: 32px;
-    margin-right: 10px;
     cursor: pointer;
     background: ${props => props.bg};
-    border: ${props => props.chosen === "true" && '2px solid #5ECE7B'};
-    height: ${props => props.chosen === "true" && '30px'};
+    height: ${props => props.chosen === "true" && '33px'};
+    pointer-events: ${props=> props.disabled === true && "none"};
 `;
 const Price = styled.div`
     margin-top: 38px;
@@ -124,7 +161,7 @@ const PriceItem = styled.div`
     line-height: 18px;
     letter-spacing: 0em;
 `;
-const Button = styled.button`
+let Button = styled.button`
     margin-top: 20px;
     display: flex;
     align-items: center;
@@ -157,22 +194,23 @@ class ProductPage extends Component {
         super(props);
 
         this.state = {
-            currentImage: this.props.chosenProduct.gallery[0],
-            chosenSize: null,
-            chosenCapacity: null,
-            chosenColor: null,
-            chosenUSB: null,
-            chosenKeyboard: null
+            currentImage: history.location.state.gallery[0],
+            chosenSize: undefined,
+            chosenCapacity: undefined,
+            chosenColor: undefined,
+            chosenUSB: undefined,
+            chosenKeyboard: undefined,
+            ID: undefined
         }
     }
     
-    getchosenUSB = (USB) => {
+    getChosenUSB = (USB) => {
         this.setState(()=> ({
             chosenUSB: USB
         }))
     }
 
-    getchosenKeyboard = (keyboard) => {
+    getChosenKeyboard = (keyboard) => {
         this.setState(()=> ({
             chosenKeyboard: keyboard
         }))
@@ -202,61 +240,38 @@ class ProductPage extends Component {
         }))
     }
 
-    showSizeAndCapacity = (attributes) => {
-        const atrObjects = attributes.map((item,i) =>{
-            if(item.name === "Size") {
-                const { items } = item;
-                return(
-                    <div key={i}>
-                    <SmallTitle>
-                        {item.name}:
-                    </SmallTitle>
-                    <SizeContainer >
-                    {items.map((el,i)=> {
-                    return  (
-                            <SizeItem 
-                            key={i}
-                            onClick={() => this.getChosenSize(el)}
-                            chosen={this.state.chosenSize === el? "true" : "false"}>
-                                {el.value}
-                            </SizeItem>
-                        ) 
-                    })}    
-                    </SizeContainer>
-                    </div>
-                )   
-                
-            } else if(item.name === "Capacity") {
-                const { items } = item;
-                return(
-                    <div key={i}>
-                    <SmallTitle>
-                        {item.name}:
-                    </SmallTitle>
-                    <SizeContainer >
-                    {items.map((el,i)=> {
-                    return  (
-                            <SizeItem 
-                            key={i}
-                            onClick={() => this.getChosenCapacity(el)}
-                            chosen={this.state.chosenCapacity === el? "true" : "false"}>
-                                {el.value}
-                            </SizeItem>
-                        ) 
-                    })}    
-                    </SizeContainer>
-                    </div>
-                )   
-                
+    getAttributesSCUK = (attributes, name, par) => {
+        
+        const getFunctionHandler = (par,el) => {
+            if(par === "Size"){
+                return this.getChosenSize(el)
+            } else if ( par === "Capacity"){
+                return this.getChosenCapacity(el)
+            } else if ( par === "Keyboard") {
+                return this.getChosenKeyboard(el)
+            } else if ( par === "USB") {
+                console.log(par);
+                return this.getChosenUSB(el)
+            } 
+            
+        }
+
+        const getStatesHandler = (par) => {
+            if(par === "Size"){
+                return this.state.chosenSize
+            } else if ( par === "Capacity"){
+                return this.state.chosenCapacity
+            } else if ( par === "USB") {
+                return this.state.chosenUSB
+            } else if ( par === "Keyboard") {
+                return this.state.chosenKeyboard
             }
-        })
-        return atrObjects
-    }
-
-    showUSB = (attributes)=> {
+        }
+        
+       
         const atrObjects = attributes.map((item,i) =>{
-            if(item.name === "With USB 3 ports") {
-                const { items } = item;
+            if(item.name === name){ 
+                const { items } = item
                 return(
                     <div key={i}>
                     <SmallTitle>
@@ -267,46 +282,22 @@ class ProductPage extends Component {
                     return  (
                             <SizeItem 
                             key={i}
-                            onClick={() => this.getchosenUSB(el)}
-                            chosen={this.state.chosenUSB === el? "true" : "false"}>
+                            disabled={ this.props.cartIsOpen===true? true : false }
+                            onClick={() => getFunctionHandler(par,el)}
+                            chosen={getStatesHandler(par) === el? "true" : "false"}>
                                 {el.value}
                             </SizeItem>
                         ) 
                     })}    
                     </SizeContainer>
                     </div>
-                )}   
-        })
+                )} else {
+                    return null
+                }   
+            })
         return atrObjects
     }
-
-    showKeyboard = (attributes)=> {
-        const atrObjects = attributes.map((item,i) =>{
-            if(item.name === "Touch ID in keyboard") {
-                const { items } = item;
-                return(
-                    <div key={i}>
-                    <SmallTitle>
-                        {item.name}:
-                    </SmallTitle>
-                    <SizeContainer >
-                    {items.map((el,i)=> {
-                    return  (
-                            <SizeItem 
-                            key={i}
-                            onClick={() => this.getchosenKeyboard(el)}
-                            chosen={this.state.chosenKeyboard === el? "true" : "false"}>
-                                {el.value}
-                            </SizeItem>
-                        ) 
-                    })}    
-                    </SizeContainer>
-                    </div>
-                )}   
-        })
-        return atrObjects
-    }
-
+   
     showColor = (attribute) => {
         const atrObjects = attribute.map((item,i) => {
             if(item.name === "Color") {
@@ -319,51 +310,142 @@ class ProductPage extends Component {
                     <ColorContainer >
                     {items.map((el,i)=> {
                     return  (
-                            <ColorItem 
-                            key={i}
-                            chosen={this.state.chosenColor === el.value? "true" :"false"} 
-                            onClick={()=>this.getChosenColor(el.value)} 
-                            bg={el.value}>
-                            </ColorItem>
+                            <ColorItemContainer key={i} chosen={this.state.chosenColor === el.value? "true" :"false"} >
+                                <ColorItem 
+                                    disabled={ this.props.cartIsOpen===true? true : false }
+                                    onClick={()=>this.getChosenColor(el.value)} 
+                                    bg={el.value}>
+                                </ColorItem>
+                            </ColorItemContainer>
                         ) 
                     })}    
                     </ColorContainer>
                     </div>
                 )   
                 
+            } else {
+                return null
             }
         })
         return atrObjects
     }
 
-    render() {
-        const { chosenProduct,cartIsOpen, currentCurrencyValue } = this.props;
-        const { brand, name, inStock, gallery, attributes,prices } = chosenProduct;
-        
-        const price = prices.map(item => {
-            if(item.currency.label === currentCurrencyValue) 
-                return `${item.currency.symbol} ${item.amount}`
-            
+    setDefaultState = (attributes, name, par) => {
+
+        const getStatesHandler = (par, el) => {
+            if(par === "Size"){
+                return this.setState(() => ({
+                    chosenSize: el
+                }))
+            } else  if(par === "Capacity"){
+                return this.setState(() => ({
+                    chosenCapacity: el
+                }))
+            }else  if(par === "USB"){
+                return this.setState(() => ({
+                    chosenUSB: el
+                }))
+            }else  if(par === "Keyboard"){
+                return this.setState(() => ({
+                    chosenKeyboard: el
+                }))
+            } else  if(par === "Color"){
+                return this.setState(() => ({
+                    chosenColor: el.value
+                }))
+            }
+        }
+
+        attributes.map(item => {
+            if(item.name === name) {
+                const { items } = item;
+                return getStatesHandler(par,items[0])
+            } else {
+                return null
+            }
         })
+    }
+
+    getRandom = (id) => {
+        let number = Math.floor(Math.random() * (100000 - 1 + 1)) + 1
+        return id + number
+    }
+
+    addingHandler = (item) => {
         
-        return (
+        this.setState(()=> ({
+            ID: this.getRandom(history.location.state.id)
+        }));
+        
+        this.props.getProductToCartPLP(item);
+
+        setTimeout(() => {
+            this.props.totalForCart()
+        },0)
+    }
+
+    showSmallImages = (gallery) => {
+        return gallery.map((image, i)=> {
+            return(
+            <SmallImageContainer
+            disabled={ this.props.cartIsOpen===true? true : false }
+            chosen={this.state.currentImage === image && "true"}
+            key={i}>
+                <SmallImage 
+                onClick={() =>this.getRightImage(image)} src={image}/>
+            </SmallImageContainer> 
+            )
+        })
+    }
+
+    pushItemToApp = () => {
+        let  quantity = 1;
+        
+        return {
+            brand: history.location.state.brand, 
+            gallery: history.location.state.gallery, 
+            inStock: history.location.state.inStock, 
+            name: history.location.state.name, 
+            prices: history.location.state.prices,
+            attributes: history.location.state.attributes,
+            id:this.state.ID,
+            quantity: quantity, 
+            chosenSize: this.state.chosenSize,
+            chosenCapacity: this.state.chosenCapacity,
+            chosenColor: this.state.chosenColor,
+            chosenUSB: this.state.chosenUSB,
+            chosenKeyboard: this.state.chosenKeyboard
+        }
+    }
+
+    componentDidMount() {
+        this.setDefaultState(history.location.state.attributes, "Size", "Size");
+        this.setDefaultState(history.location.state.attributes, "Capacity","Capacity");
+        this.setDefaultState(history.location.state.attributes, "With USB 3 ports", "USB");
+        this.setDefaultState(history.location.state.attributes, "Touch ID in keyboard", "Keyboard");
+        this.setDefaultState(history.location.state.attributes, "Color", "Color");
+        this.setState(()=> ({
+            ID: this.getRandom(history.location.state.id)
+        }));
+    }
+
+    render() {
+
+        const { currentCurrencyValue, cartIsOpen } = this.props;
+        const { brand, gallery, inStock, name, prices, description, attributes } = history.location.state;
+        
+        return ( 
             <Container cartIsOpen={cartIsOpen}>
+                <Wrapper>
                 <Left>
-                {gallery.map((image, i)=> {
-                    if(i < 5)
-                        return(
-                        <SmallImageContainer
-                        chosen={this.state.currentImage === image && "true"}
-                        key={i}>
-                            <SmallImage 
-                            onClick={() =>this.getRightImage(image)} src={image}/>
-                        </SmallImageContainer> 
-                        )
-                    })}
+                {this.showSmallImages(gallery)}
                 </Left>
                 <Center>
-                    <BigImageContainer>
+                    <BigImageContainer inStock={inStock}>
                         <BigImage src={this.state.currentImage}/>
+                        <OutOfStock inStock={inStock}>
+                        OUT OF STOCK
+                        </OutOfStock>
                     </BigImageContainer>
                 </Center>
                 <Right>
@@ -374,9 +456,10 @@ class ProductPage extends Component {
                         {name}
                     </SubTitle>
                     <Size>
-                        {this.showSizeAndCapacity(attributes)}
-                        {this.showUSB(attributes)}
-                        {this.showKeyboard(attributes)}
+                        {this.getAttributesSCUK(attributes, "Size","Size")}
+                        {this.getAttributesSCUK(attributes, "Capacity","Capacity")}
+                        {this.getAttributesSCUK(attributes, "With USB 3 ports", "USB")}
+                        {this.getAttributesSCUK(attributes, "Touch ID in keyboard", "Keyboard")}
                     </Size>
                     <Color>
                     {this.showColor(attributes)}
@@ -385,15 +468,19 @@ class ProductPage extends Component {
                         <SmallTitle>
                             PRICE:
                         </SmallTitle>
-                        <PriceItem>{price}</PriceItem>
+                        <PriceItem>{GetCurrentPrice(prices,currentCurrencyValue)}</PriceItem>
                     </Price>
-                    <Button inStock={inStock} disabled={inStock === false? true : false}>ADD TO CART</Button>
+                    <Button 
+                        onClick={() =>this.addingHandler(this.pushItemToApp())}
+                        inStock={inStock} 
+                        disabled={inStock === false? true : false || cartIsOpen === true? true:false}>
+                            ADD TO CART
+                        </Button>
                     <Desc>
-                    Find stunning women's cocktail dresses and party dresses.
-                    Stand out in lace and metallic cocktail dresses and party
-                    dresses from all your favorite brands.
+                        {description.replace(/<\/?[^>]+(>|$)/g, "")}
                     </Desc>
                 </Right>
+                </Wrapper>
             </Container>
         );
     }

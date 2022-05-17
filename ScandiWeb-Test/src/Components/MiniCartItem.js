@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import GetCurrentPrice from '../Functions/GetCurrentPrice';
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -44,7 +45,7 @@ const SmallTitle = styled.p`
 const SizeContainer = styled.div`
     display: flex;
 `;
-const SizeItem = styled.div`
+let SizeItem = styled.div`
     margin-top: 8px;
     margin-right: 8px;
     width: 24px;
@@ -66,16 +67,25 @@ const Color = styled.div`
 `;
 const ColorContainer = styled.div`
     display: flex;
+    align-items: center;
 `;
-const ColorItem = styled.div`
+
+let ColorItemContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 17px;
+    height: 17px;
+    margin-right: 10px;
+    border: ${props => props.chosen === "true" && '2px solid #5ECE7B'};
+`;
+
+let ColorItem = styled.div`
     width: 16px;
     height: 16px;
-    margin-top: 8px;
-    margin-right: 10px;
-
+    
     background: ${props => props.bg};
-    border: ${props => props.chosen === "true" && '1.6px solid #5ECE7B'};
-    height: ${props => props.chosen === "true" && '14px'};
+    height: ${props => props.chosen === "true" && '16px'};
 `;
 const Right = styled.div`
     display: flex;
@@ -138,20 +148,118 @@ const Image = styled.img`
     object-fit: cover;
 `;
 
-class MiniCartItem extends Component {
-    render() {
-        const { productsInCart, currentCurrencyValue } = this.props;
-        
 
-        const itemInCart = productsInCart.map((product,i) => {
-            
-            const price = product.prices.map(item => {
-                if(item.currency.label === currentCurrencyValue) {
-                    return `${item.currency.symbol} ${item.amount}`
-                }
+class MiniCartItem extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            prices: []
+        }
+    }
+
+    setPrices = (price) => {
+        this.setState(({prices}) =>({
+            prices: [...prices, price]
+        }))
+    }
+
+    getAttributesSCUK = (attributes, name, par,chosenPar) => {
+
+        const getStatesHandler = (par) => {
+            if(par === "Size"){
+                return chosenPar
+            } else if ( par === "Capacity"){
+                return chosenPar
+            } else if ( par === "USB") {
+                return chosenPar
+            } else if ( par === "Keyboard") {
+                return chosenPar
+            }
+        }
+        
+       
+        const atrObjects = attributes.map((item,i) =>{
+            if(item.name === name) {
+                const { items } = item
+                return(
+                    <div key={i}>
+                    <SmallTitle>
+                        {item.name}:
+                    </SmallTitle>
+                    <SizeContainer >
+                    {items.map((el,i)=> {
+                    return  (
+                            <SizeItem 
+                            style={par === "Capacity"? {width: 34, height: 34, fontSize: 10} : null}
+                            key={i}
+                            chosen={getStatesHandler(par) === el? "true" : "false"}>
+                                {el.value}
+                            </SizeItem>
+                        ) 
+                    })}    
+                    </SizeContainer>
+                    </div>
+                )} else {
+                    return null
+                }   
             })
+        return atrObjects
+    }
+   
+    showColor = (attribute,chosenColor) => {
+        const atrObjects = attribute.map((item,i) => {
+            if(item.name === "Color") {
+                const { items } = item;
+                return(
+                    <div key={i}>
+                    <SmallTitle>
+                        COLOR:
+                    </SmallTitle>
+                    
+                    <ColorContainer >
+                    {items.map((el,i)=> {
+                    return  (
+                            <ColorItemContainer  chosen={chosenColor === el.value? "true" :"false"}>
+                            <ColorItem 
+                            chosen={chosenColor === el.value? "true" :"false"} 
+                            bg={el.value}>
+                            </ColorItem>
+                            </ColorItemContainer>
+                        ) 
+                    })}    
+                    </ColorContainer>
+                    </div>
+                )   
+                
+            } else {
+                return null
+            }
+        })
+        return atrObjects
+    }
+
+    onClickHandlerPlus = (product) => {
+        this.props.handleChangeCart(product, 1,product.id)
+        this.props.countTotal();
+        setTimeout(()=> {
+            this.props.totalForCart()
+        },0)
+    }
+
+    onClickHandlerMinus = (product) => {
+        this.props.handleChangeCart(product, -1,product.id)
+        this.props.countTotal();
+        setTimeout(()=> {
+            this.props.totalForCart()
+        },0)
+    }
+
+    itemInCart = () => {
+        return this.props.productsInCart.map((product,i) => {
             
             return (
+                
                 <Container key={i}>
                 <Left>
                     <Title>
@@ -161,101 +269,42 @@ class MiniCartItem extends Component {
                         {product.name}
                     </SubTitle>
                     <Price>
-                        {price}
+                        {GetCurrentPrice(product.prices, this.props.currentCurrencyValue)}
                     </Price>
                     <Size>
-                        {/* <SmallTitle>
-                        Size:
-                        </SmallTitle>
-                        <SizeContainer>
-                            <SizeItem chosen="true">XS</SizeItem>
-                            <SizeItem>S</SizeItem>
-                            <SizeItem>M</SizeItem>
-                            <SizeItem>L</SizeItem>
-                        </SizeContainer> */}
+                        {this.getAttributesSCUK(product.attributes, "Size", "Size", product.chosenSize)}
+                        {this.getAttributesSCUK(product.attributes, "Capacity","Capacity", product.chosenCapacity)}
+                        {this.getAttributesSCUK(product.attributes, "With USB 3 ports", "USB", product.chosenUSB)}
+                        {this.getAttributesSCUK(product.attributes, "Touch ID in keyboard", "Keyboard", product.chosenKeyboard)}
                     </Size>
                     <Color>
-                        {/* <SmallTitle>
-                        Color:
-                        </SmallTitle>
-                        
-                        <ColorContainer>
-                            <ColorItem chosen="true" bg="red"></ColorItem>
-                            <ColorItem bg="green"></ColorItem>
-                            <ColorItem bg="yellow"></ColorItem>
-                        </ColorContainer> */}
+                        {this.showColor(product.attributes,product.chosenColor)}
                     </Color>
                 </Left>
                 <Right>
-                    <AmountContainer>
-                        <Button>
+                    <AmountContainer style={product.attributes.length > 2 ? {height: 294} : {height: 207}}>
+                        <Button onClick={()=> this.onClickHandlerPlus(product)}>
                             <Plus/>
                         </Button>
-                        <Amount>1</Amount>
-                        <Button>
+                        <Amount>{product.quantity}</Amount>
+                        <Button onClick={()=> this.onClickHandlerMinus(product)}>
                             <Minus/>
                         </Button>
                     </AmountContainer>
                      <ImageContainer>
-                        <Image src={product.name==="Jacket"? product.gallery[5] : product.gallery}/>
+                        <Image style={product.attributes.length > 2 ? {height: 294} : {height: 207}} src={product.name==="Jacket"? product.gallery[5] : product.gallery}></Image>
                     </ImageContainer>
                 </Right>
             </Container>
             )
         })
+    }
+
+    render() {
         return (
             <>
-                {itemInCart}
+                {this.itemInCart()}
             </>
-            // <Container>
-            //     <Left>
-            //         <Title>
-            //             Apollo
-            //         </Title>  
-            //         <SubTitle>
-            //             Running Short
-            //         </SubTitle>
-            //         <Price>
-            //             $50
-            //         </Price>
-            //         <Size>
-            //             <SmallTitle>
-            //             Size:
-            //             </SmallTitle>
-            //             <SizeContainer>
-            //                 <SizeItem chosen="true">XS</SizeItem>
-            //                 <SizeItem>S</SizeItem>
-            //                 <SizeItem>M</SizeItem>
-            //                 <SizeItem>L</SizeItem>
-            //             </SizeContainer>
-            //         </Size>
-            //         <Color>
-            //             <SmallTitle>
-            //             Color:
-            //             </SmallTitle>
-                        
-            //             <ColorContainer>
-            //                 <ColorItem chosen="true" bg="red"></ColorItem>
-            //                 <ColorItem bg="green"></ColorItem>
-            //                 <ColorItem bg="yellow"></ColorItem>
-            //             </ColorContainer>
-            //         </Color>
-            //     </Left>
-            //     <Right>
-            //         <AmountContainer>
-            //             <Button>
-            //                 <Plus/>
-            //             </Button>
-            //             <Amount>1</Amount>
-            //             <Button>
-            //                 <Minus/>
-            //             </Button>
-            //         </AmountContainer>
-            //          <ImageContainer>
-            //             <Image src="https://cdn.shopify.com/s/files/1/0096/2622/2688/files/TT_Dropdown_sweater_2048x2048.jpg?v=1639666761"/>
-            //         </ImageContainer>
-            //     </Right>
-            // </Container>
         );
     }
 }

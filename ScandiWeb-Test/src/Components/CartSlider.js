@@ -10,14 +10,14 @@ const Container = styled.div`
     overflow: hidden;
 `;
 
-const Wrapper = styled.div`
+let Wrapper = styled.div`
     height: 100%;
     display: flex;
     transition: all 1.5s ease;
     transform: translateX(${props => props.slideIndex * - 200}px);
 `;
 
-const Arrow = styled.div`
+let Arrow = styled.div`
     position: absolute;
     top: 80%;
     bottom: 0;
@@ -63,59 +63,79 @@ class CartSlider extends Component {
         }
     }
         handleClick = (direction) => {
-        
-            if(direction === "left") {
-                this.setState(({slideIndex}) => {
-                    if(slideIndex > 0) {
-                       return {
-                         slideIndex: slideIndex - 1  
-                       } 
-                    } else {
-                        return {
-                            slideIndex: 2  
-                        } 
-                    }
-                })
-            } else { 
-                this.setState(({slideIndex}) => {
-                    if(slideIndex < 2) {
-                        return {
-                            slideIndex: slideIndex + 1  
-                          } 
-                    } else {
+            if(this.props.gallery.length > 3) {
+                if(direction === "left") {
+                    this.setState(({slideIndex}) => {
+                        if(slideIndex > 0) {
+                           return {
+                             slideIndex: slideIndex - 1  
+                           } 
+                        } else {
+                            return {
+                                slideIndex: this.props.gallery.length - 1  
+                            } 
+                        }
+                    })
+                } else { 
+                    this.setState(({slideIndex}) => {
+                        if(slideIndex < this.props.gallery.length - 1) {
+                            return {
+                                slideIndex: slideIndex + 1  
+                              } 
+                        } else {
+                            return {
+                                slideIndex: 0  
+                            } 
+                        }
+                    })
+                }
+            } else {
+                if(direction === "left") {
+                    this.setState(({slideIndex}) => {
+                
                         return {
                             slideIndex: 0  
                         } 
-                    }
-                })
+                        
+                    })
+                } else { 
+                    this.setState(({slideIndex}) => {
+                        
+                        return {
+                            slideIndex: 0  
+                        } 
+                        
+                    })
+                }
             }
+            
 
         }
     
     render() {
         return (
             <Container>
-                <Arrow direction="left" onClick = {() => this.handleClick("left")}>
+                <Arrow 
+                    style={this.props.gallery.length > 1 ? {display: 'flex'} : {display: "none"}}
+                    direction="left" 
+                    onClick = {() => this.handleClick("left")}>
                     <ArrowImageLeft src={require ('../Images/slider-left.png')}/>
                 </Arrow>
                 <Wrapper slideIndex={this.state.slideIndex}>
-                <Slide>
-                    <ImageContainer>
-                        <Image src={"https://cdn.shopify.com/s/files/1/0096/2622/2688/files/TT_Dropdown_sweater_2048x2048.jpg?v=1639666761"}/>
-                    </ImageContainer>
-                </Slide>
-                <Slide>
-                    <ImageContainer>
-                        <Image src={"https://velmet.ua/image/cache/catalog/images/products/50-takticheskaya-voennaya-odezhda/59-kiteli-rubashki/rubashka-boevaya-zewana-x-1-combat-shirt-mawka-2-940x1000.jpg"}/>
-                    </ImageContainer>
-                </Slide>
-                <Slide>
-                    <ImageContainer>
-                        <Image src={"https://contents.mediadecathlon.com/p1484240/k$ab565f3675dbdd7e3c486175e2c16583/men-s-travel-trekking-shirt-travel100-warm-bordeaux.jpg?&f=800x800"}/>
-                    </ImageContainer>
-                </Slide>
+                {this.props.gallery.map((item,i) => {
+                    return (
+                        <Slide key={i}>
+                        <ImageContainer>
+                            <Image  src={item}/>
+                        </ImageContainer>
+                        </Slide>
+                    )
+                })}
                 </Wrapper>
-                <Arrow direction="right" onClick = {() => this.handleClick("right")}>
+                <Arrow 
+                    style={this.props.gallery.length > 1 ? {display: 'flex'} : {display: "none"}}
+                    direction="right" 
+                    onClick = {() => this.handleClick("right")}>
                     <ArrowImageRight src={require ('../Images/slider-right.png')}/>
                 </Arrow>
             </Container>

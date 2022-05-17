@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import CartSlider from '../Components/CartSlider';
+import CountTotal from '../Functions/CountTotal';
+import GetCurrentPrice from '../Functions/GetCurrentPrice.js'
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -45,7 +47,7 @@ const SmallTitle = styled.p`
 const SizeContainer = styled.div`
     display: flex;
 `;
-const SizeItem = styled.div`
+let SizeItem = styled.div`
     margin-right: 8px;
     display: flex;
     align-items: center;
@@ -66,15 +68,25 @@ const Color = styled.div`
 `;
 const ColorContainer = styled.div`
     display: flex;
+    aign-items: center;
 `;
-const ColorItem = styled.div`
+
+let ColorItemContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 37.2px;
+    height: 36.9px;
+    margin-right: 10px;
+    border: ${props => props.chosen === "true" && '2px solid #5ECE7B'};
+`;
+
+let ColorItem = styled.div`
     width: 36px;
     height: 36px;
-    margin-right: 10px;
 
     background: ${props => props.bg};
-    border: ${props => props.chosen === "true" && '2px solid #5ECE7B'};
-    height: ${props => props.chosen === "true" && '34px'};
+    height: ${props => props.chosen === "true" && '36px'};
 `;
 
 const Right = styled.div`
@@ -133,61 +145,188 @@ const HR = styled.hr`
 `;
 
 class CartItem extends Component {
-    render() {
-        return (
-            <>
-             <HR/>
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            total: 0,
+            totalAmount: 0,
+            totalTax: 0
+        }
+    }
+
+
+    getAttributesSCUK = (attributes, name, par,chosenPar) => {
+
+        const getStatesHandler = (par) => {
+            if(par === "Size"){
+                return chosenPar
+            } else if ( par === "Capacity"){
+                return chosenPar
+            } else if ( par === "USB") {
+                return chosenPar
+            } else if ( par === "Keyboard") {
+                return chosenPar
+            }
+        }
+        
+       
+        const atrObjects = attributes.map((item,i) =>{
+            
+            if(item.name === name) {
+                const { items } = item
+                return(
+                    <div key={i}>
+                    <SmallTitle>
+                        {item.name}:
+                    </SmallTitle>
+                    <SizeContainer >
+                    {items.map((el,i)=> {
+                    return  (
+                            <SizeItem 
+                            key={i}
+                            chosen={getStatesHandler(par) === el? "true" : "false"}>
+                                {el.value}
+                            </SizeItem>
+                        ) 
+                    })}    
+                    </SizeContainer>
+                    </div>
+            )} else {
+                return null
+            }  
+        })
+        
+            return atrObjects
+    }
+   
+    showColor = (attribute,chosenColor) => {
+        const atrObjects = attribute.map((item,i) => {
+            if(item.name === "Color") {
+                const { items } = item;
+                return(
+                    <div key={i}>
+                    <SmallTitle>
+                        COLOR:
+                    </SmallTitle>
+                    <ColorContainer >
+                    {items.map((el,i)=> {
+                    return  (
+                            <ColorItemContainer key={i} chosen={chosenColor === el.value? "true" :"false"}>
+                            <ColorItem 
+                            chosen={chosenColor === el.value? "true" :"false"} 
+                            bg={el.value}>
+                            </ColorItem>
+                            </ColorItemContainer>
+                        ) 
+                    })}    
+                    </ColorContainer>
+                    </div>
+                )   
+                
+            } else {
+                return null
+            }
+        })
+        return atrObjects
+    }
+
+    countTotal = () => {
+        this.setState(()=>({
+            totalAmount: CountTotal(this.props.productsInCart, this.props.currentCurrencyValue).totalAmount
+        }))
+
+        this.setState(()=>({
+            total: CountTotal(this.props.productsInCart, this.props.currentCurrencyValue).totalPrice
+        }))
+
+        this.setState(()=>({
+            totalTax: CountTotal(this.props.productsInCart, this.props.currentCurrencyValue).totalTax
+        }));
+    
+    }
+    
+    handlerMendlerPlus = (product) => {
+        this.props.handleChangeCart(product, 1,product.id);
+        this.countTotal();
+        this.props.totalForCart();
+        setTimeout(()=> {
+            this.props.getTotalAndAmountAndTax(this.state.total, this.state.totalAmount,this.state.totalTax)
+        },100)
+    }
+
+    handlerMendlerMinus = (product) => {
+        this.props.handleChangeCart(product, -1,product.id);
+        this.countTotal();
+        this.props.totalForCart();
+        setTimeout(()=> {
+            this.props.getTotalAndAmountAndTax(this.state.total, this.state.totalAmount,this.state.totalTax)
+        },100)
+    }
+
+    itemInCart = () => {
+        return this.props.productsInCart.map((product,i) => {
+
+            return (
+                <div key={i}>
+            <HR/>
             <Container>
                 <Left>
                     <Title>
-                        Apollo 
+                        {product.brand}
                     </Title> 
                     <SubTitle>
-                        Running Short
+                        {product.name}
                     </SubTitle>
                     <Price>
-                        $50
+                        {GetCurrentPrice(product.prices, this.props.currentCurrencyValue)}
                     </Price>
                     <Size>
-                        <SmallTitle>
-                            SIZE:
-                        </SmallTitle>
-                        <SizeContainer>
-                            <SizeItem chosen="true">XS</SizeItem>
-                            <SizeItem>S</SizeItem>
-                            <SizeItem>M</SizeItem>
-                            <SizeItem>L</SizeItem>
-                        </SizeContainer>
+                        {this.getAttributesSCUK(product.attributes, "Size", "Size", product.chosenSize)}
+                        {this.getAttributesSCUK(product.attributes, "Capacity","Capacity", product.chosenCapacity)}
+                        {this.getAttributesSCUK(product.attributes, "With USB 3 ports", "USB", product.chosenUSB)}
+                        {this.getAttributesSCUK(product.attributes, "Touch ID in keyboard", "Keyboard", product.chosenKeyboard)}
                     </Size>
                     <Color>
-                        <SmallTitle>
-                            COLOR:
-                        </SmallTitle>
-                        <ColorContainer>
-                            <ColorItem chosen="true" bg="red"></ColorItem>
-                            <ColorItem bg="green"></ColorItem>
-                            <ColorItem bg="lightgrey"></ColorItem>
-                        </ColorContainer>
+                    {this.showColor(product.attributes,product.chosenColor)}
                     </Color>
                 </Left>
                 <Right>
-                    <AmountContainer>
+                    <AmountContainer style={product.attributes.length > 2 ? {height: 439} : {height: 310}}>
                         <Button>
-                            <Plus/>
+                            <Plus onClick={() =>this.handlerMendlerPlus(product)}/>
                         </Button>
-                        <Amount>1</Amount>
+                        <Amount>{product.quantity}</Amount>
                         <Button>
-                            <Minus/>
+                            <Minus onClick={() =>this.handlerMendlerMinus(product)}/>
                         </Button>
                     </AmountContainer>
-                     <SliderContainer>
-                        <CartSlider/>
+                     <SliderContainer >
+                        <CartSlider gallery={product.gallery}/>
                     </SliderContainer>
                 </Right>
                
                 
             </Container>
-        </>
+        </div>
+            )
+
+        })
+    }
+
+    componentDidMount() {
+        this.countTotal();
+        setTimeout(()=> {
+            this.props.getTotalAndAmountAndTax(this.state.total, this.state.totalAmount,this.state.totalTax)
+        },100)
+    }
+
+    render() {
+        return (
+            <>
+                {this.itemInCart()}
+            </>
         );
     }
 }

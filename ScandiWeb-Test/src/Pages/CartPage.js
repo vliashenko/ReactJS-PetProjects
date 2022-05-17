@@ -8,7 +8,14 @@ class CartPage extends Component {
     render() {
         return (
             <Container>
-                <Cart/>
+                <Cart 
+                    totalForCart={this.props.totalForCart}
+                    closeCart={this.props.closeCart}
+                    cartIsOpen={this.props.cartIsOpen}
+                    productsInCart={this.props.productsInCart}
+                    currentCurrencyValue={this.props.currentCurrencyValue}
+                    handleChangeCart={this.props.handleChangeCart}
+                    />
             </Container>
         );
     }

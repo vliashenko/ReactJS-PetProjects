@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import MiniCartItem from './MiniCartItem';
+import { gql } from "@apollo/client"
+import { client } from '..';
+import { GetCurrencySign } from '../Functions/GetCurrencySign';
+import CountTotal from '../Functions/CountTotal';
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -8,14 +12,16 @@ const Container = styled.div`
    display: flex;
    align-items: center;
    justify-content: space-between;
+   max-width: 1280px;
+  margin: 0 auto;
 `;
 const Left = styled.div`
     display: flex;
 `;
-const Category = styled.div`
+let Category = styled.div`
     font-size: 16px;
     font-weight: 600;
-    line-height: 48px;
+    line-height: 78px;
     letter-spacing: 0px;
     text-align: center;
     margin: 0px 16px;
@@ -28,6 +34,8 @@ const Category = styled.div`
         color: #5ECE7B;
         border-bottom: 2px solid #5ECE7B;
     }
+
+    pointer-events: ${props=> props.disabled === true && "none"}
 `;
 const Center = styled.div`
     margin-right: 12%;
@@ -51,7 +59,7 @@ const LineImage = styled.img`
 const ArrowImage = styled.img`
     position: absolute;
     top: 30%;
-    left: 61%;
+    left: 62%;
     width: 5.41px;
     height: 3.19px;
 `;
@@ -67,13 +75,15 @@ const Currency = styled.div`
     position: relative;
 `;
 
-const CurrencySign = styled.div`
+let CurrencySign = styled.div`
     font-size: 18px;
     font-weight: 500;
     line-height: 29px;
     letter-spacing: 0em;
     color: #1D1F22;
     cursor: pointer;
+
+    pointer-events: ${props=> props.disabled === true && "none"};
 `;
 const CurrencyVector = styled.img`
     width: 6px;
@@ -84,7 +94,7 @@ const CurrencyVector = styled.img`
 
 const CurrencyMenu = styled.div`
     position: absolute;
-    top: 30px;
+    top: 93px;
     left: -40px;
     width: 114px;
     height: 169px;
@@ -93,8 +103,9 @@ const CurrencyMenu = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    z-index: 1000;
 `;
-const CurrencyItem = styled.div`
+let CurrencyItem = styled.div`
     width: 100%;
     text-align: center;
     padding: 14px 0px;
@@ -111,12 +122,14 @@ const CurrencyItem = styled.div`
     }
 `;
 
-const CartContainer = styled.div`
+let CartContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     position: relative;
+
+    pointer-events: ${props=> props.disabled === true && "none"}
 `;
 const CartImage = styled.img`
     width: 20px;
@@ -218,25 +231,25 @@ const ButtonCheck = styled.button`
     cursor: pointer;
 `;
 
+let StyledLink = styled(Link)`
+    text-decoration: none;
+
+    pointer-events: ${props=> props.disabled === true && "none"};
+`;
+
 class Header extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            categories:[],
+            currencies: [],
             currencyIsOpen: false,
             cartIsOpen: false,
-            activeCategory: "allProducts",
-            activeCurrencyValue: "USD"
-        }
-    }
-
-    getCurrencySign = () => {
-        if(this.state.activeCurrencyValue === "USD"){
-            return "$"
-        } else if (this.state.activeCurrencyValue === "GBP"){
-            return "£"
-        } else {
-            return "¥"
+            activeCategory: this.props.localCategory,
+            activeCurrencyValue: "USD",
+            total: 0,
+            totalAmount: 0
         }
     }
 
@@ -251,7 +264,32 @@ class Header extends Component {
         this.props.getCurrentCurrencyValue(value)
     }
 
-    
+    closeCurrency = () => {
+        this.setState(() => ({
+            currencyIsOpen: false
+        }))
+    }
+
+    setCurrencyOpen = (e) => {
+        this.setState(({currencyIsOpen})=> ({
+            currencyIsOpen: !currencyIsOpen
+        }))
+        e.stopPropagation();
+        document.addEventListener("click", this.closeCurrency);
+    }
+
+    showCurrencies = () => {
+        return this.state.currencies.map((item,i)=> {
+            return (
+                <CurrencyItem
+                    key={i}
+                    activeCurrency={this.state.activeCurrencyValue === item.label? 'true' : 'false'} 
+                    onClick={() => this.onClickCurrency(item.label)}>
+                    {item.symbol + item.label}
+                </CurrencyItem>
+            )
+        })
+    }
 
     getActiveCategory = (category) => {
         this.setState(() => ({
@@ -260,110 +298,175 @@ class Header extends Component {
     }
 
     onClickCategory = (category) => {
+        this.props.addLocalCategory(category)
         this.getActiveCategory(category)
-        this.props.getCategory(category)
     }
 
-    setCurrencyOpen = () => {
-        this.setState(({currencyIsOpen})=> ({
-            currencyIsOpen: !currencyIsOpen
+    showCategories = () => {
+        return this.state.categories.map((item,i)=> {
+            let name = item.name;
+            return (
+                <Link onClick={this.state.cartIsOpen === true? (e) => e.preventDefault() : null}
+                    key={i}
+                    to="/" 
+                    style={{textDecoration: "none"}}>
+                    <Category 
+                        disabled={this.state.cartIsOpen === true? true : false} 
+                        category={this.state.activeCategory === item.name ? 'true' : 'false'} 
+                        onClick={() => this.onClickCategory(item.name)}>
+                        {name.charAt(0).toUpperCase() + name.slice(1)}
+                    </Category>
+                </Link>
+            )
+        })
+    }
+
+    closeCart = () => {
+        this.setState(() => ({
+            cartIsOpen: false
         }))
     }
 
-    setCartOpen = () => {
-        this.setState(({cartIsOpen})=> ({
-            cartIsOpen: !cartIsOpen
+    openCart = (e) => {
+        this.setState(() => ({
+            cartIsOpen: true
         }))
-        setTimeout(() => {
-            this.props.checkCartState(this.state.cartIsOpen)
-        },0)
+    }
+
+    setCartOpen = (e) => {
+        this.state.cartIsOpen === false ? this.openCart() : this.closeCart()
+        
+        this.props.checkCartState(!this.state.cartIsOpen)
+        this.countTotal();
+
+        e.stopPropagation();
+        document.addEventListener("click", () => {
+            this.closeCart();
+            setTimeout(()=> {
+                this.props.checkCartState(this.state.cartIsOpen)
+            },0)
+        }) 
+    }
+
+    countTotal = () => {
+
+        this.setState(()=>({
+            totalAmount: CountTotal(this.props.productsInCart, this.props.currentCurrencyValue).totalAmount
+        }))
+
+        this.setState(()=>({
+            total: CountTotal(this.props.productsInCart, this.props.currentCurrencyValue).totalPrice
+        }))
+    
+    }
+
+    componentDidMount() {
+        client.query({
+            query:gql`
+            query {
+                currencies{
+                    label,
+                    symbol
+                }
+              }  
+            `
+           }).then(res => {
+      
+           let currencies = res.data.currencies;
+
+           this.setState(()=>({currencies}))
+        })
+
+        client.query({
+            query:gql`
+            query {
+                categories{
+                    name
+                }
+            }
+            `
+        }).then(res => {
+            let categories = res.data.categories;
+
+            if(categories !== null)
+            this.setState(()=>({categories}))
+        })
     }
 
     render() {
-        const { productsInCart, currentCurrencyValue } = this.props;
+        const { productsInCart, currentCurrencyValue,totalAmount } = this.props;
         
         return (
             <Container>
                 <Left>
-                    <Link to="/" style={{textDecoration: "none"}}>
-                    <Category 
-                    category={this.state.activeCategory === "allProducts" ? 'true' : 'false'} 
-                    onClick={() => this.onClickCategory('allProducts')}>
-                        All
-                    </Category>
-                    </Link>
-                    <Link to="/" style={{textDecoration: "none"}}>
-                    <Category 
-                     category={this.state.activeCategory === "tech" ? 'true' : 'false'}
-                    onClick={() => this.onClickCategory('tech')}>
-                        Tech
-                    </Category>
-                    </Link>
-                    <Link to="/" style={{textDecoration: "none"}}>
-                    <Category 
-                     category={this.state.activeCategory === "clothes" ? 'true' : 'false'}
-                    onClick={() =>this.onClickCategory('clothes')}>
-                        Clothes
-                    </Category>
-                    </Link>
+                   {this.showCategories()}
                 </Left>
                 <Center>
-                <Link to="/" style={{textDecoration: "none"}}>
+                <StyledLink to="/" disabled={this.state.cartIsOpen === true? true:false }>
                     <BoxImage src={require ('../Images/logo.png')}/>
                     <LineImage src={require ('../Images/logo-arrow.png')}/>
                     <ArrowImage src={require ('../Images/logo-arrow-vector.png')}/>
-                </Link>
+                </StyledLink>
                 </Center>
                 <Right>
                     <Currency >
-                        <CurrencySign onClick = {this.setCurrencyOpen}>
-                        {this.getCurrencySign()}   
+                        <CurrencySign  
+                            disabled={this.state.cartIsOpen === true? true:false} 
+                            onClick = {this.setCurrencyOpen}>
+                        {GetCurrencySign(this.state.activeCurrencyValue)}   
                         </CurrencySign>
                         
                         <CurrencyVector onClick = {this.setCurrencyOpen} src={require ('../Images/vector-arrow.png')}/>
                         {this.state.currencyIsOpen && 
-                            <CurrencyMenu>
-                            <CurrencyItem 
-                            activeCurrency={this.state.activeCurrencyValue === "USD"? 'true' : 'false'} 
-                            onClick={() => this.onClickCurrency('USD')}>$ USD</CurrencyItem>
-                            <CurrencyItem 
-                            activeCurrency={this.state.activeCurrencyValue === "GBP"? 'true' : 'false'} 
-                            onClick={() => this.onClickCurrency('GBP')}>£ GBP</CurrencyItem>
-                            <CurrencyItem 
-                            activeCurrency={this.state.activeCurrencyValue === "JPY" ? 'true' : 'false'} 
-                            onClick={() => this.onClickCurrency('JPY')}>¥ JPY</CurrencyItem>
+                            <CurrencyMenu onClick={this.setCurrencyOpen}>
+                            {this.showCurrencies()}
                             </CurrencyMenu>
                         }
                     </Currency>
-                    <CartContainer>
-                        <CartImage onClick = {this.setCartOpen} src={require ('../Images/cart.png')}/>
-                        {productsInCart.length > 0 && <CartQuantity>{productsInCart.length}</CartQuantity>}
+                    <CartContainer 
+                        onClick={this.countTotal} 
+                        disabled={this.state.currencyIsOpen === true? true:false}>
+                        <CartImage 
+                            onClick = {this.setCartOpen} 
+                            src={require ('../Images/cart.png')}/>
+                        {productsInCart.length > 0 && 
+                        <CartQuantity>
+                            {totalAmount}
+                        </CartQuantity>}
+                          
                         {this.state.cartIsOpen && 
-                        <CartListContainer>
+                        <CartListContainer 
+                            onClick={e => e.stopPropagation()}
+                            style={ productsInCart.length > 0 ?{overflowY: "scroll", height:'400px'} : {height: '10px'}}>
                             {productsInCart.length > 0? 
                             <MiniCartContent>
                             <Title>
                                 My Bag,
                                 <ItemCount>
-                                   {productsInCart.length} {productsInCart.length > 1 ? "items" : "item"} 
+                                   {this.state.totalAmount === 1? this.state.totalAmount + " item" : this.state.totalAmount + " items"} 
                                 </ItemCount>
                                  
                             </Title>
                             <MiniCartItem 
+                                countTotal={this.countTotal}
                                 currentCurrencyValue={currentCurrencyValue}
-                                productsInCart={productsInCart}/>
+                                productsInCart={productsInCart}
+                                handleChangeCart={this.props.handleChangeCart}
+                                totalForCart={this.props.totalForCart}/>
                             <Total>
                                 <TotalText>
                                     Total
                                 </TotalText>
                                 <TotalSum>
-                                    $200.00
+                                    {GetCurrencySign(this.state.activeCurrencyValue)}{this.state.total}
                                 </TotalSum>
                             </Total>
                             <ButtonContainer>
-                               <ButtonBag>
+                                <Link to="/CartPage">
+                               <ButtonBag onClick={this.closeCart}>
                                 VIEW BAG
-                            </ButtonBag>
+                                </ButtonBag>
+                                </Link>
                             <ButtonCheck>
                                 CHECKOUT
                             </ButtonCheck> 
