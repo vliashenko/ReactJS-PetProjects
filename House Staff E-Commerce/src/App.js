@@ -1,11 +1,7 @@
 import { Component } from "react";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Categories from "./components/Categories";
-import Slider from "./components/Slider";
-import Items from "./components/Items";
-import Guarantee from "./components/Guarantee";
-import Announcement from "./components/Announcement";
+import Main from "./Pages/Main";
+import ProductPage from "./Pages/ProductPage";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 class App extends Component {
   constructor(props){
@@ -23,7 +19,10 @@ class App extends Component {
             {'currency': '$', amount: '49.99 '},
             {'currency': '£', amount: '39.78'} 
           ],
-          attributes: {color: ['#ffffff', '#939393'], height: ["1.1m", "1.3m"]}
+          attributes: [
+            {color: ['#ffffff', '#939393']}, 
+            {height: ["1.1m", "1.3m"]}
+          ]
         },
         {
           id: "table-scana",
@@ -35,7 +34,11 @@ class App extends Component {
             {'currency': '$', amount: '149.99'},
             {'currency': '£', amount: '119.35'} 
           ],
-          attributes: {color: ['#ffffff', '#AE9E55', '#250F47', '#473C0F'], height: ["0.7m", "1m"]}
+          attributes: [
+            {color: ['#ffffff', '#AE9E55', '#250F47', '#473C0F']}, 
+            {height: ["0.7m", "0.9m"]},
+            {wood: ["вишня", "дуб"]}
+          ]
         },
         {
           id: "sofa-scana",
@@ -47,7 +50,9 @@ class App extends Component {
             {'currency': '$', amount: '329.99'},
             {'currency': '£', amount: '262.57'} 
           ],
-          attributes: {color: ['#ffffff', '#1B8CA9', '#623D21']}
+          attributes: [
+            {color: ['#ffffff', '#1B8CA9', '#623D21']}
+          ]
         },
         {
           id: "lamp-white-scana",
@@ -59,7 +64,10 @@ class App extends Component {
             {'currency': '$', amount: '19.99'},
             {'currency': '£', amount: '15.91'} 
           ],
-          attributes: {color: ['#1E1D1C', '#C28C51', '#623D21'], light: ["м'яке біле світло", "звичайна лампка"]}
+          attributes: [
+            {color: ['#1E1D1C', '#C28C51', '#623D21']}, 
+            {light: ["м'яке біле світло", "звичайна лампка"]}
+          ]
         },
         {
           id: "chair-white-scana",
@@ -71,7 +79,9 @@ class App extends Component {
             {'currency': '$', amount: '49.99'},
             {'currency': '£', amount: '39.78'} 
           ],
-          attributes: {color: ['#ffffff', '#939393']}
+          attributes: [
+            {color: ['#ffffff', '#939393']}
+          ]
         },
         {
           id: "table-white-scana",
@@ -83,7 +93,9 @@ class App extends Component {
             {'currency': '$', amount: '79.99'},
             {'currency': '£', amount: '63.65'} 
           ],
-          attributes: {color: ['#ffffff', '#939393']}
+          attributes: [
+            {color: ['#ffffff', '#939393']}
+          ]
         }
       ],
       categoryItems: [
@@ -149,21 +161,30 @@ class App extends Component {
 
   render() {
     return (
+      <BrowserRouter>
       <div className="wrapper"> 
-        <Header 
-          getCartState={this.getCartState} 
+      <Routes>
+        <Route path="/" exact element={ 
+        <Main
+          getCartState={this.getCartState}
           orders={this.state.orders}
-        />
-
-        <div className={this.state.cartOpen === true ? "backdropPage" : null}>
-          <Categories categoryItems={this.state.categoryItems}/>
-          <Slider sliderItems={this.state.sliderItems}/>
-          <Items items={this.state.items} onAdd={this.addToOrder}/>
-          <Announcement/>
-          <Guarantee/>
-          <Footer/>
-        </div>
+          cartOpen={this.state.cartOpen}
+          categoryItems={this.state.categoryItems}
+          sliderItems={this.state.sliderItems}
+          items={this.state.items}
+          addToOrder={this.addToOrder}
+        />}/>
+        <Route path="/productPage/:id" exact element={  
+        <ProductPage
+          items={this.state.items}
+          getCartState={this.getCartState}
+          orders={this.state.orders}
+          cartOpen={this.state.cartOpen}
+        />}/>
+        <Route path="*" element={<Navigate to="/"/>}/>
+      </Routes>
       </div>
+      </BrowserRouter>
     );
   }
 }

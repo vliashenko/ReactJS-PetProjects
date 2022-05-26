@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import Order from "./Order";
 
 class Header extends Component {
@@ -41,7 +42,9 @@ class Header extends Component {
         return (
             <header>
                 <div>
+                    <Link to="/">
                     <span className="logo">House Staff</span>
+                    </Link>
                     <ul className='nav'>
                         <li>Про нас</li>
                         <li>Контакти</li>

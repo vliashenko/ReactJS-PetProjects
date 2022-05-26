@@ -423,6 +423,7 @@ section .content-container span:hover {
 }
 
 main {
+  margin-top: 100px;
   display: flex;
   width: 100%;
   flex-wrap: wrap;
@@ -487,11 +488,93 @@ main .add-to-cart:hover {
   transform: scale(1.15);
 }
 
+.newsletter {
+  margin-top: 70px;
+  background: url('https://bykvu.com/wp-content/uploads/2020/09/01/a955da50816315.58da7b3fb1275.jpg');
+  width: 100%;
+  height: 330px;
+  background-size: cover;
+  background-position: center center;
+  background-blend-mode: multiply;
+  background-color: #686868 ;
+}
+
+.newsletter-content {
+  padding-top: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.newsletter-content h3 {
+  font-size: 24px;
+  color: white;
+  text-shadow: 0 2px 34px black;
+}
+
+.newsletter-content p {
+  margin-top: 20px;
+  font-weight: 400;
+  font-size: 20px;
+  color: white;
+  text-shadow: 0 2px 34px black;
+}
+
+.newsletter-input-container {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.newsletter-input-container input {
+  border: none;
+  outline: none;
+  width: 400px;
+  height: 45px;
+  border-radius: 3px 0 0 3px;
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+.newsletter-input-container button {
+  width: 80px;
+  height: 45px;
+  border: none;
+  border-radius: 0 3px 3px 0;
+  background: rgba(0, 0, 0, 0.436);
+  transition: all 400ms ease;
+  cursor: pointer;
+}
+
+.newsletter-input-container button:hover {
+  background: rgba(0, 0, 0, 0.705);
+}
+
+.newsletter-input-container button .fa-envelope {
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.announcement {
+  margin: 100px auto;
+  max-width: 980px;
+  text-align: center;
+}
+.announcement-title {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 400;
+}
+.announcement-text {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .guarantee {
   display: flex;
   justify-content: space-between;
   height: 150px;
-  margin-top: 100px;
+  margin: 20px 0;
 }
 
 .guarantee-item {
@@ -502,7 +585,7 @@ main .add-to-cart:hover {
 }
 
 .guarantee-icon {
-  background:rgb(130, 130, 130);
+  background:rgba(143, 126, 102, 0.675);
   width: 33px;
   height: 33px;
   padding: 10px;
@@ -533,22 +616,7 @@ main .add-to-cart:hover {
 }
 
 .guarantee-link:hover {
-  opacity: 0.5;
-}
-
-.announcement {
-  margin: 50px auto;
-  max-width: 980px;
-  text-align: center;
-}
-.announcement-title {
-  margin-bottom: 10px;
-  font-size: 18px;
-  font-weight: 400;
-}
-.announcement-text {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  color:rgb(179, 144, 95);
 }
 
 
@@ -556,7 +624,8 @@ main .add-to-cart:hover {
   display: flex;
   justify-content: space-around;
   width: 100%;
- 
+  margin-top: 100px;
+  margin-bottom: 150px;
 }
 
 .back-arrow {
@@ -583,10 +652,10 @@ main .add-to-cart:hover {
 }
 
 
-
 .product-image-container {
   position: relative;
   width:370px;
+  height: 491px;
 }
 
 .product-image-container img {
@@ -596,8 +665,15 @@ main .add-to-cart:hover {
   transition: transform 500ms ease-in-out;
 }
 
+.product-title {
+  margin-bottom: 20px;
+}
+
 .product-item-desc {
   width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .product-item-desc .description {
@@ -606,33 +682,62 @@ main .add-to-cart:hover {
 
 .price {
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-top: 45px;
 }
 
 .btn-container {
-  margin-top: 85px;
+  margin-top: 75px;
 }
 
-.atrributes {
+.attributes {
   display: flex;
 }
 
-.atrributes div{
-  margin: 4rem 20px 0 0;
-  width: 30px;
+.attributes div{
+  margin: 2rem 20px 0 0;
+  width: auto;
+  padding: 5px 8px;
   height: 30px;
-  border: 1px solid rgb(164, 164, 164);
+  border: 1px solid rgba(164, 164, 164, 0.416);
   position: relative;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
 }
 
-.checked:after {
+.checked-attribute {
+  background: #d68d2d;
+  color: white;
+}
+
+.checked-color:after {
   position: absolute;
   left: 30%;
   content: '✓';
   font-size: 20px;
   font-weight: 600;
   color: rgb(13, 255, 0);
+}
+
+.attributes-color {
+  display: flex;
+}
+
+.attribute-color-item {
+  margin: 2rem 20px 0 0;
+  width: 30px;
+  padding: 3px;
+  height: 30px;
+  border: 1px solid rgba(164, 164, 164, 0.416);
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
 }
 
 .btn-container div{
@@ -653,6 +758,110 @@ main .add-to-cart:hover {
 }
 
 footer {
+  margin: 20px 0;
+  display: flex;
+}
+
+.footer-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.footer-left-desc {
+  margin: 20px 0px;
+}
+.footer-left-social {
+  display: flex;
+}
+.footer-left-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: all 400ms ease;
+}
+
+.footer-left-icon:hover {
+  transform: scale(1.10);
+}
+
+.footer-left-icon.facebook{
+  background: #1778F2;
+}
+
+.footer-left-icon.instagram {
+  background: linear-gradient(180deg, #F58529 0%, #FEDA77 25%, #DD2A7B 51%, #8134AF 76%, #515BD4 100%);
+}
+.footer-left-icon.linkedin {
+  background: #006192;
+}
+.footer-left-icon.github {
+  background: black;
+}
+
+.fa-facebook-f, 
+.fa-instagram, 
+.fa-linkedin-in, 
+.fa-github-alt {
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+
+.footer-center {
+  flex: 1;
+  padding: 20px;
+  padding-left: 120px;
+}
+
+.footer-center-title {
+  margin-bottom: 30px;
+}
+
+.footer-center-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.footer-center-listitem {
+  width: 50%;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 400ms ease;
+}
+
+.footer-center-listitem:hover {
+  opacity: 0.5;
+}
+
+.footer-right {
+  flex: 1;
+  padding: 20px;
+}
+
+.footer-right-title {
+  margin-bottom: 30px;
+}
+
+.footer-right-contactitem {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.contact-text {
+  margin-left: 10px;
+}
+
+.rights {
+  margin-top: 20px;
   text-align: center;
-  margin-top: 100px;
 }

@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 class Guarantee extends Component {
     render() {
         return (
+            <>
+            <hr/>
             <div className='guarantee'>
                     <div className="guarantee-item">
                         <div className="guarantee-icon">
@@ -35,6 +37,8 @@ class Guarantee extends Component {
                         </div>
                     </div>  
                 </div>
+                <hr/>
+                </>
         );
     }
 }
