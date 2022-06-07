@@ -4,7 +4,6 @@ import Spinner from "../spinner/Spinner";
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from "../skeleton/Skeleton"
 import './charInfo.scss';
-import thor from '../../resources/img/thor.jpeg';
 
 class CharInfo extends Component {
 
@@ -97,7 +96,7 @@ const View = ({char}) => {
                 </div>
             </div>
             <div className="char__descr">
-            {description === undefined || description.length === 0 ? "There is no description for this character" : description.slice(0, 190) + "..."}
+            {description === undefined || description.length === 0 ? "There is no description for this character" : description}
             </div>
             <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">
