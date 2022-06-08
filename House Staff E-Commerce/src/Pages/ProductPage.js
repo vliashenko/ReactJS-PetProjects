@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Announcement from '../components/Announcement';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Newsletter from '../components/Newsletter';
@@ -89,6 +88,8 @@ class ProductPage extends Component {
                         </div>
                     </div>
                 )
+            } else {
+                return null
             }
         })
         return product
@@ -110,7 +111,6 @@ class ProductPage extends Component {
                 <div className={this.props.cartOpen === true ? "backdropPage" : null}>
                     {this.showProduct(id)}
                     <Newsletter/>
-                    <Announcement/>
                     <Footer/>
                 </div>
             </div>
@@ -118,6 +118,7 @@ class ProductPage extends Component {
     }
 }
 
+// eslint-disable-next-line
 export default (props) => (
     <ProductPage
         {...props}

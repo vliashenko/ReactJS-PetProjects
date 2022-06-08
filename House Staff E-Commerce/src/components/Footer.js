@@ -4,7 +4,7 @@ class Footer extends Component {
     render() {
         return (
             <>
-            <hr />
+
             <footer>
                 <div className="footer-left">
                     <h1>House Staff</h1>
