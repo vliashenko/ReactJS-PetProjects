@@ -1,0 +1,77 @@
+@import "../../style/style.scss";
+
+.about-us {
+    display: flex;
+    margin: 120px auto 0;
+    max-width: 1280px;
+    height: 435px;
+    background: #FBFBFB;
+    &__col__one {
+        display: flex;
+        flex: 1;
+        &__first__container {
+            position: relative;
+            &_img1 {
+                margin-top: 20px;
+                margin-left: 50px;
+                width: 270px;
+                height: 265px;
+            }
+            &_img2 {
+                margin-top: 15px;
+                margin-left: 50px;
+                width: 270px;
+                height: 140px;
+            }
+        }
+
+        &__second__container {
+
+            &_img3 {
+                margin-top: 50px;
+                width: 270px;
+                height: 345px;
+            }
+        }
+    }
+
+    &__col__two {
+        flex: 1;
+        margin-top: 30px;
+        margin-left: 30px;
+        &__title {
+            font-weight: 600;
+            font-size: 64px;
+            line-height: 64px;
+            color: $titleMainColor;
+        }
+        &__text {
+            margin-top: 20px;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 25px;
+            color: $textMainColor;
+        }
+        &__button {
+            margin-top: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 222px;
+            height: 71px;
+            background: white;
+            border: none;
+            text-transform: uppercase;
+            transition: all ease-in-out 600ms;
+            color: $textMainColor;
+        }
+        &__button__vector {
+            margin-left: 15px;
+            width: 17.21px;
+            height: 8px;
+        }
+        &__button:hover {
+            transform: scale(1.10);
+        }
+    }
+}

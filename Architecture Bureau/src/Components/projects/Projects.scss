@@ -1,0 +1,89 @@
+@import "../../style/style.scss";
+
+.projects {
+    max-width: 1280px;
+    margin: 120px auto 0;
+    &__title {
+        font-weight: 300;
+        font-size: 64px;
+        line-height: 64px;
+        color: $titleMainColor;
+    }
+    &__container {
+        margin-top: 60px;
+        &__first {
+            display: flex;
+            justify-content: space-between;
+            &__img1 {
+                width: 600px;
+                height: 255px;
+                object-fit: cover;
+                transition: all ease-in-out 600ms;
+                position: relative;
+            }
+           
+            &__img2 {
+                width: 600px;
+                height: 255px;
+                object-fit: cover;
+                transition: all ease-in-out 600ms;
+            }
+            
+        }
+
+        &__second {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            &__img3 {
+                width: 290px;
+                height: 255px;
+                object-fit: cover;
+                transition: all ease-in-out 600ms;
+            }
+            
+            &__img4 {
+                width: 500px;
+                height: 255px;
+                object-fit: cover;
+                transition: all ease-in-out 600ms;
+            }
+           
+            &__img5 {
+                width: 400px;
+                height: 255px;
+                object-fit: cover;
+                transition: all ease-in-out 600ms;
+            }
+            
+        }
+        
+    } 
+
+    &__button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+        float: right;
+        width: 222px;
+        height: 71px;
+        color: white;
+        background: $textMainColor;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 12px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        transition: all ease-in-out 600ms;
+        cursor: pointer;
+        &__vector {
+            margin-left: 15px;
+            width: 24px;
+            height: 24px;
+        }
+    }
+    &__button:hover {
+        transform: scale(1.10);
+    }
+}

@@ -1,0 +1,87 @@
+@import "../../style/style.scss";
+
+.header {
+    animation: fadeInAnimation ease 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 105px;
+    max-width: 1280px;
+    margin: 0 auto;
+    &__logo__container {
+        width: 75px;
+        height: 48.71px;
+    }
+    &__logo {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    &__navbar__container {
+        width: 560px;
+        margin-right: 240px;
+        color: $textMainColor;
+    }
+    &__navbar__list {
+        display: flex;
+        line-height: 23px;
+        font-weight: 400;
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    &__navbar__item {
+        margin: 0 30px;
+        position: relative;
+        &__focus {
+            margin: 0 30px;
+            border-top: 1px solid  $textMainColor;
+            border-bottom: 1px solid  $textMainColor;
+        }
+    }
+    &__navbar__item::before,
+    &__navbar__item::after {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        border: 0px solid transparent;
+        width: 0%;
+        height: 0%;
+        bottom: 0%;
+        right: 0%;
+    }
+    &__navbar__item::before {
+        border-bottom-width: 1px;
+    }
+    &__navbar__item::after {
+        border-top-width: 1px;
+    }
+    &__navbar__item:hover {
+        color: rgb(0, 0, 0);
+    }
+    &__navbar__item:hover::before,
+    &__navbar__item:hover::after {
+        border-color: rgb(0, 0, 0);
+        transition: border-color 0s, width 0.3s, height 0.3s;
+        width: 100%;
+        height: 100%;
+    }
+    &__navbar__item:hover::before{
+        transition-delay: 0s, 0s, 0.3s;
+    }
+    &__navbar__item:hover::after {
+        transition-delay: 0s, 0.3s, 0s;
+    }
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

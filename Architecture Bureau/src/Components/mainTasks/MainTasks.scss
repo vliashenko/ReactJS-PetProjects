@@ -1,0 +1,51 @@
+@import "../../style/style.scss";
+
+.main-tasks {
+    margin: 120px auto 0;
+    max-width: 1280px;
+    &__title {
+        font-weight: 300;
+        font-size: 64px;
+        line-height: 64px;
+        color: $titleMainColor;
+    }
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        &__col__one {
+            margin-top: 60px;
+            width: 505px;
+            display: flex;
+            &__image {
+                width: 104px;
+                height: 140px;
+            }
+            &__text {
+                margin-left: 60px;
+                width: 359px;
+                font-weight: 400;
+                font-size: 22px;
+                line-height: 36px;
+                color: $textMainColor;
+            }
+        }
+
+        &__col__two {
+            margin-top: 60px;
+            width: 505px;
+            display: flex;
+            &__image {
+                width: 104px;
+                height: 140px;
+            }
+            &__text {
+                margin-left: 60px;
+                width: 359px;
+                font-weight: 400;
+                font-size: 22px;
+                line-height: 36px;
+                color: $textMainColor;
+            }
+        }
+    }
+}

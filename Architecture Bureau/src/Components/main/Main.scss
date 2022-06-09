@@ -1,0 +1,115 @@
+@import "../../style/style.scss";
+
+.main {
+    animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    &__col__one {
+        display: flex;
+        align-items: center;
+        &__buttons {
+            margin-left: 100px;
+            display: flex;
+            flex-direction: column;
+        }
+        &__button {
+            margin: 11.5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 53px;
+            height: 53px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 1s;
+            border: white;
+        }
+        &__button__image {
+            width: 17.21px;
+            height: 8px;
+            transform:rotate(90deg)
+        }
+        &__button:hover {
+            background: #F9F9F9;
+            border: 1px solid #F2F2F2;
+        }
+    }
+    &__col__one__title {
+
+        &__first {
+            font-weight: 300;
+            font-size: 64px;
+            line-height: 64px;
+            color: $titleMainColor;
+        }
+        &__second {
+            font-weight: 700;
+            font-size: 64px;
+            line-height: 64px;
+            color: $textMainColor;
+        }
+    }
+    
+
+    &__col__two {
+        &__container {
+            display: flex;
+            overflow: hidden;
+            width: 770px;
+            height: 829px;
+        }
+        &__image__container {
+            width: 770px;
+            height: 829px;
+            position: relative;
+            transition: all 800ms ease;
+        }
+        &__image {
+            width: 100%;
+            height: 100%;
+        }
+        &__button {
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            width: 222px;
+            height: 71px;
+            background: white;
+            border: none;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: all ease-in-out 600ms;
+            cursor: pointer;
+        }
+        &__button__vector {
+            margin-left: 15px;
+            width: 17.21px;
+            height: 8px;
+        }
+        &__button:hover {
+            transform: scale(1.10);
+        }
+    }
+
+
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
