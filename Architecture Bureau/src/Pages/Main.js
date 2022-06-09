@@ -4,6 +4,7 @@ import Main from '../Components/main/Main';
 import AboutUs from '../Components/about-us/AboutUs';
 import MainTasks from '../Components/mainTasks/MainTasks';
 import Projects from '../Components/projects/Projects';
+import Form from '../Components/form/Form';
 
 class MainPage extends Component {
     render() {
@@ -14,6 +15,7 @@ class MainPage extends Component {
                 <AboutUs/>
                 <MainTasks/>
                 <Projects/>
+                <Form/>
             </div>
         );
     }

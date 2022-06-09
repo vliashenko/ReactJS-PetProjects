@@ -1,0 +1,81 @@
+@import "../../style/style.scss";
+
+.form {
+    margin: 220px auto 0;
+    max-width: 1280px;
+    &__title {
+        font-weight: 300;
+        font-size: 64px;
+        line-height: 64px;
+        color: $titleMainColor;
+    }
+    &__container__wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+    &__container {
+        margin-top: 30px;
+        &__fields {
+            display: flex;
+            flex-direction: column;
+        }
+        &__field {
+            margin: 5px 0;
+            width: 391px;
+            height: 46px;
+            background: #F3F3F3;
+            padding-left: 21px;
+            border: none;
+            outline: none;
+            &_text {
+                width: 391px;
+                height: 147px;
+                margin: 5px 0;
+                background: #F3F3F3;
+                padding-top: 21px;
+                padding-left: 21px;
+                border: none;
+                outline: none;
+                resize: none;
+            }
+        }
+        &__image {
+            width: 749px;
+            height: 369px;
+        }
+        &__img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    &__message {
+        margin-top: 30px;
+        width: 600px;
+    }
+    &__button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+        float: left;
+        width: 222px;
+        height: 71px;
+        color: white;
+        background: $textMainColor;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 12px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        transition: all ease-in-out 600ms;
+        cursor: pointer;
+        &__vector {
+            margin-left: 15px;
+            width: 24px;
+            height: 24px;
+        }
+    }
+    &__button:hover {
+        transform: scale(1.10);
+    }
+}
