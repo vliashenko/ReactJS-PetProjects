@@ -1,0 +1,57 @@
+@import "../../style/style.scss";
+
+.projectItem {
+    max-width: 1280px;
+    margin: 120px auto 0;
+    &__title {
+        &__content1 {
+            font-weight: 400;
+            font-size: 64px;
+            line-height: 64px;
+            color: $titleMainColor;
+        }
+        &__content2 {
+            font-weight: 700;
+            font-size: 64px;
+            line-height: 64px;
+            color: $textMainColor;
+        }
+    }
+
+    &__container {
+        margin-top: 60px;
+        &__first {
+            width: 100%;
+            height: 435px;
+            &__img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        &__second {
+            margin-top: 30px;
+            display: flex;
+            &__img {
+                width: 419px;
+                height: 428px;
+                object-fit: cover;
+                margin-right: 30px;
+            }
+            &__text {
+                font-weight: 400;
+                font-size: 18px;
+                line-height: 25px;
+                color: $textMainColor;
+            }
+        }
+        &__third {
+            margin-top: 30px;
+            &__img {
+                width: 100%;
+                height: 435px;
+                object-fit: cover;
+            }
+        }
+    }
+}
