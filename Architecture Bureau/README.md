@@ -1,5 +1,6 @@
 Architecture Bureau<br>
-Tech Stack: ReactJS(Class components, react-router-dom, HOC).<br>
+Tech Stack: ReactJS(JsX, Class components, react-router-dom, HOC), SCSS.<br>
+Rest API: Pexels.<br>
 
 
 ![architecture__main](https://user-images.githubusercontent.com/87814580/173550745-649a9dbc-2b53-43cc-bd7c-b556d27148f3.jpeg)
