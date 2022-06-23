@@ -83,7 +83,7 @@ const Footer = () => {
                 <Logo>SKANA.</Logo>
                     <Desc>
                     There are many variations of passages of Lorem Ipsum aviable, but
-                    the mjority have suffered alteration in some form, bu injected 
+                    the majority have suffered alteration in some form, by injected 
                     humor, or randomised words wich don't look even slightly believable.
                     </Desc>
                         <SocialContainer>

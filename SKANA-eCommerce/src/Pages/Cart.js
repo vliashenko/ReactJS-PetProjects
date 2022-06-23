@@ -1,5 +1,6 @@
 import { Add, Remove } from '@mui/icons-material';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components'
 import Announcement from '../Components/Announcement';
 import Footer from '../Components/Footer';
@@ -141,6 +142,36 @@ const SummaryButton = styled.button`
 `
 
 const Cart = () => {
+    const cart = useSelector(state => state.cart);
+
+    const showProducts = () => {
+        return cart.products.map(product => {
+            return (
+                <>
+                    <Product>
+                        <ProductDetail>
+                            <Image src={product.img}></Image>
+                            <Details>
+                                <ProductName><b>Product :</b>{product.title}</ProductName>
+                                <ProductId><b>ID :</b>{product._id}</ProductId>
+                                <ProductColor color={product.color}/>
+                                <ProductSize><b>Size :</b>{product.size}</ProductSize>
+                            </Details>
+                        </ProductDetail>
+                        <PriceDetail>
+                            <ProductAmountContainer>
+                                <Add/>
+                                <ProductAmount>{product.quantity}</ProductAmount>
+                                <Remove/>
+                            </ProductAmountContainer>
+                            <ProductPrice>$ {product.price * product.quantity}</ProductPrice>
+                        </PriceDetail> 
+                    </Product>
+                    <Hr/>
+                </>
+            )
+        })
+    }
     return (
         <Container>
             <Navbar/>
@@ -157,51 +188,13 @@ const Cart = () => {
                     </Top>
                     <Bottom>
                         <Info>
-                            <Product>
-                               <ProductDetail>
-                                   <Image src="https://global-uploads.webflow.com/5d556af3fe21d65f602dca94/5dec1f7e45001e15bbd6ace3_3zy1pwvBnmaK.png"></Image>
-                                    <Details>
-                                        <ProductName><b>Product :</b>JESSIE THUNDER DRESS</ProductName>
-                                        <ProductId><b>ID :</b>9475930475</ProductId>
-                                        <ProductColor color='black'/>
-                                        <ProductSize><b>Size :</b>XS</ProductSize>
-                                    </Details>
-                               </ProductDetail>
-                               <PriceDetail>
-                                   <ProductAmountContainer>
-                                       <Add/>
-                                       <ProductAmount>2</ProductAmount>
-                                       <Remove/>
-                                   </ProductAmountContainer>
-                                   <ProductPrice>$ 30</ProductPrice>
-                                </PriceDetail> 
-                            </Product>
-                            <Hr/>
-                            <Product>
-                               <ProductDetail>
-                                   <Image src="https://www.pngall.com/wp-content/uploads/2/White-Sneakers-PNG-Clipart.png"></Image>
-                                    <Details>
-                                        <ProductName><b>Product :</b>NIKE AIR FORCE 1</ProductName>
-                                        <ProductId><b>ID :</b>9470000475</ProductId>
-                                        <ProductColor color='red'/>
-                                        <ProductSize><b>Size :</b>41.5</ProductSize>
-                                    </Details>
-                               </ProductDetail>
-                               <PriceDetail>
-                                   <ProductAmountContainer>
-                                       <Add/>
-                                       <ProductAmount>2</ProductAmount>
-                                       <Remove/>
-                                   </ProductAmountContainer>
-                                   <ProductPrice>$ 130</ProductPrice>
-                                </PriceDetail> 
-                            </Product>
+                            {showProducts()}
                         </Info>
                         <Summary>
                             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                             <SummaryItem>
                                 <SummaryItemText>Subtotal</SummaryItemText>
-                                <SummaryItemPrice>$ 160</SummaryItemPrice>
+                                <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
                             </SummaryItem>
                             <SummaryItem>
                                 <SummaryItemText>Estimated Shipping</SummaryItemText>

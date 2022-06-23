@@ -15,23 +15,17 @@ class App extends Component {
         <Routes>
           <Route path="/" exact element={<Home/>}/>
           
-          <Route path="/products/:categoty" exact element={<ProductList/>}/>
-       
+          <Route path="/products/:category" exact element={<ProductList/>}/>
        
           <Route path="/product/:id" exact element={<Product/>}/>
        
-       
           <Route path="/cart" exact element={<Cart/>}/>
         
-       
           <Route path="/login" exact element={user ? <Navigate to='/'/> : <Login/>}/>
         
-        
           <Route path="/register" exact element={user ? <Navigate to='/'/> : <Register/>}/>
-        
-       
+    
           <Route path="*" element={<Navigate to="/" replace/>}/>
-        
         </Routes>
       </BrowserRouter>
       

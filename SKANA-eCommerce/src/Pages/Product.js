@@ -6,6 +6,12 @@ import Navbar from '../Components/Navbar';
 import Newsletter from '../Components/Newsletter';
 import { Add, Remove } from '@mui/icons-material';
 import { mobile } from '../responsive';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import {useLocation} from "react-router-dom"
+import axios from 'axios';
+import { addProduct } from '../redux/cartRedux';
+import { useDispatch } from 'react-redux';
 
 const Container = styled.div`
 
@@ -57,8 +63,9 @@ const FilterColor = styled.div`
     height: 20px;
     border-radius: 50%;
     background-color: ${props=> props.color};
-    margin: 0px 5px;
+    margin: 0px 8px;
     cursor: pointer;
+    border: 1px solid #afafaf;
 `;
 const FilterSize = styled.select`
     margin-left: 10px;
@@ -105,43 +112,80 @@ const Button = styled.button`
 
 
 const Product = () => {
+
+    const location = useLocation();
+    const productId = location.pathname.split('/')[2];
+
+    const [product, setProduct] = useState({});
+    const [quantity, setQuantity] = useState(1);
+    const [color, setColor] = useState("");
+    const [size, setSize] = useState("");
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+
+        const getProduct = async () => {
+            try {
+                const res = await axios.get(`http://localhost:5000/api/products/find/${productId}`)
+                setProduct(res.data)
+                setColor(res.data.color[0])
+                setSize(res.data.size[0])
+            } catch(err) {
+                console.log(err);
+            }
+        }
+        getProduct()
+    }, [productId])
+
+    const handleQuantity = (type) => {
+        if(type === "dec") {
+           quantity > 1 && setQuantity(quantity - 1)
+        } else {
+            setQuantity(quantity + 1)
+        }
+    }
+
+    const handleClick = () => {
+        dispatch(
+            addProduct({ ...product, quantity, color, size })
+        )
+    }
+
     return (
         <Container>
             <Navbar/>
             <Announcement/>
             <Wrapper>
                 <ImageContainer>
-                    <Image src="https://global-uploads.webflow.com/5d556af3fe21d65f602dca94/5dec1f7e45001e15bbd6ace3_3zy1pwvBnmaK.png"/>
+                    <Image src={product.img}/>
                 </ImageContainer>
                 <InfoContainer>
-                    <Title>Denim Jumpsuit</Title>
-                    <Desc>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quo saepe aspernatur quaerat et vitae ad voluptates, maiores quos optio non nostrum tempora recusandae fugiat, commodi quod maxime laudantium. Corrupti.</Desc>
-                    <Price>$20</Price>
+                    <Title>{product.title}</Title>
+                    <Desc>{product.description}</Desc>
+                    <Price>$ {product.price}</Price>
                     <FilterContainer>
                         <Filter>
                             <FilterTitle>Color</FilterTitle>
-                            <FilterColor color="black"/>
-                            <FilterColor color="darkblue"/>
-                            <FilterColor color="grey"/>
+                            {product.color?.map((c) => {
+                                return <FilterColor onClick={() => setColor(c)} color={c} key={c}/>
+                            })}
                         </Filter>
                         <Filter>
                             <FilterTitle>Size</FilterTitle>
-                            <FilterSize>
-                                <FilterSizeOption>XS</FilterSizeOption>
-                                <FilterSizeOption>S</FilterSizeOption>
-                                <FilterSizeOption>M</FilterSizeOption>
-                                <FilterSizeOption>L</FilterSizeOption>
-                                <FilterSizeOption>XL</FilterSizeOption>
+                            <FilterSize onChange={(e) => setSize(e.target.value)}>
+                               {product.size?.map((s) => {
+                                    return <FilterSizeOption key={s}>{s}</FilterSizeOption>
+                                })}
                             </FilterSize>
                         </Filter>
                     </FilterContainer>
                     <AddContainer>
                         <AmountContainer>
-                            <Remove/>
-                            <Amount>1</Amount>
-                            <Add/>
+                            <Remove style={{cursor: "pointer"}} onClick={()=> handleQuantity("dec")}/>
+                            <Amount>{quantity}</Amount>
+                            <Add style={{cursor: "pointer"}} onClick={()=> handleQuantity("inc")}/>
                         </AmountContainer>
-                        <Button>ADD TO CART</Button>
+                        <Button onClick={handleClick}>ADD TO CART</Button>
                     </AddContainer>
                 </InfoContainer>
             </Wrapper>

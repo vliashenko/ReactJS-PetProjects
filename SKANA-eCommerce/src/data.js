@@ -26,21 +26,21 @@ export const sliderItems = [
 export const categories = [
     {
         id:4,
-        img: "https://www.whistles.com/dw/image/v2/BDCH_PRD/on/demandware.static/-/Sites-whistles-master-catalog/default/dw9f97795f/images/00103388852/whistles-tie-waist-wool-coat-neutral-01.jpg?sw=571&sh=800&strip=false",
+        img: "https://cdn.shopify.com/s/files/1/0166/6656/products/skinnydip-hoodies-sweatshirts-disney-x-skinnydip-cinderella-vintage-poster-hoodie-28216778915927_600x.jpg?v=1654117983",
         title: "HOODIE LOVE!",
         category: "hoodie"
     },
     {
         id:5,
         img: "https://www.style-files.com/wp-content/uploads/2019/05/everlane7.jpg",
-        title: "SHIRT STYLE!",
+        title: "WOMEN`S STYLE!",
         category: "women"
     },
     {
         id:6,
-        img: "https://www.telegraph.co.uk/content/dam/fashion/2020/01/08/6454533830_2_8_16_trans_NvBQzQNjv4BqqVzuuqpFlyLIwiB6NTmJwfSVWeZ_vEN7c6bHu2jJnT8.jpg?imwidth=480",
-        title: "LIGHT JACKETS!",
-        category: "man"
+        img: "https://www.apetogentleman.com/wp-content/uploads/2018/06/male-models-guinness.jpg",
+        title: "MEN`S FASHION!",
+        category: "men"
     },
 ]
 
